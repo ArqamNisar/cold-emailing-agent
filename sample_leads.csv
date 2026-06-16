@@ -1,0 +1,6 @@
+Company,Email,Role,Focus Areas,Skills,Years Exp
+Google,recruiting@google.com,AI Developer,Search and AI research,"Python, PyTorch, Jax",3.5
+Microsoft,hiring@microsoft.com,Software Engineer,Cloud and AI systems,"C#, Python, Azure",5
+Meta,jobs@meta.com,Research Scientist,Large Language Models,"PyTorch, NLP, Distributed Systems",2
+Netflix,talent@netflix.com,Backend Engineer,Streaming infrastructure,"Java, AWS, SQL",4.5
+Apple,careers@apple.com,iOS Engineer,On-device ML,"Swift, CoreML, Objective-C",1.5
