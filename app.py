@@ -1,6 +1,13 @@
 import streamlit as st
 import pandas as pd
+from dotenv import load_dotenv
+load_dotenv()
+
 import database
+from agents.analyzer_agent import run_analyzer
+from logger import get_logger
+
+log = get_logger(__name__)
 
 # Initialize database
 database.init_db()
@@ -86,6 +93,15 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# ── Sidebar ──────────────────────────────────────────────────────────────────
+with st.sidebar:
+    st.markdown("## ⚙️ Settings")
+    st.markdown("---")
+    st.markdown("#### 📖 About")
+    st.write("Powered by **LangGraph** + **Gemini 2.5 Flash**. "
+             "The analyzer agent parses each lead and decides the optimal tone, "
+             "length and hooks before generating email variations.")
+
 # Setup navigation tabs
 tab_csv, tab_manual, tab_db = st.tabs([
     "📥 CSV Import & Parse", 
@@ -130,6 +146,7 @@ def auto_map_columns(columns):
     return mapping
 
 def generate_mock_emails(company, role, skills, experience, num_variations):
+    log.info("Generating %d mock emails | company='%s' role='%s'", num_variations, company, role)
     variations = [
         {
             "subject": f"Inquiry: Connecting regarding {role} roles at {company}",
@@ -158,47 +175,126 @@ def render_email_generation_ui(lead, key_prefix):
     company = lead.get('Company Name', lead.get('company_name', ''))
     role = lead.get('Target Role', lead.get('target_role', ''))
     skills = lead.get('My Skills', lead.get('my_skills', ''))
-    
-    # Safely handle experience parsing/display
+
     exp_val = lead.get('Experience (Years)', lead.get('experience_years', 0.0))
     try:
         exp = f"{float(exp_val):.1f}"
     except (ValueError, TypeError):
         exp = str(exp_val)
-        
-    st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown(f"### ✉️ Create Emails for {company}")
-    st.write(f"Customize and generate outreach emails for the **{role}** position.")
-    
-    # Variations selection button / radio
-    num_variations = st.radio(
-        "Select number of variations of emails to be generated:",
-        options=[1, 2, 3, 4, 5],
-        index=2, # default to 3
-        horizontal=True,
-        key=f"{key_prefix}_num_vars"
-    )
-    
+
     lead_id = f"{company}_{role}"
-    state_lead_id_key = f"{key_prefix}_current_lead_id"
-    session_key = f"{key_prefix}_generated_emails"
-    
+    state_lead_id_key  = f"{key_prefix}_current_lead_id"
+    session_key        = f"{key_prefix}_generated_emails"
+    analysis_key       = f"{key_prefix}_analysis"
+
+    # Reset generated state when a different lead is selected
     if st.session_state.get(state_lead_id_key) != lead_id:
         st.session_state[state_lead_id_key] = lead_id
-        if session_key in st.session_state:
-            del st.session_state[session_key]
+        for k in (session_key, analysis_key):
+            if k in st.session_state:
+                del st.session_state[k]
+
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
+    st.markdown(f"### ✉️ Create Emails for **{company}**")
+    st.write(f"Targeting the **{role}** position.")
+
+    # ── Flow 1: Lead not yet analyzed ─────────────────────────────────────
+    if analysis_key not in st.session_state:
+        st.write("Analyse the lead's business focus and role to determine the best cold-email outreach strategy.")
+        
+        analyze_clicked = st.button(
+            "🔍 Run Lead Analysis",
+            type="primary",
+            key=f"{key_prefix}_analyze_btn"
+        )
+        
+        if analyze_clicked:
+            log.info("Run Lead Analysis clicked | lead='%s'", lead_id)
+            with st.spinner("🔍 Running lead analyzer (LangGraph)…"):
+                analysis = run_analyzer(lead)
+                st.session_state[analysis_key] = analysis
+                # Clear previous generated emails if any
+                if session_key in st.session_state:
+                    del st.session_state[session_key]
+                st.rerun()
+
+    # ── Flow 2: Lead has been analyzed ────────────────────────────────────
+    else:
+        analysis = st.session_state[analysis_key]
+        if analysis.get("error") and not analysis.get("company_industry"):
+            st.warning(f"⚠️ Analyzer ran in fallback mode: {analysis['error']}")
+
+        with st.expander("🔬 Lead Analysis Report", expanded=True):
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.markdown("**📊 Input Analysis**")
+                st.markdown(f"- **Industry:** {analysis.get('company_industry', '—')}")
+                st.markdown(f"- **Value Proposition:** {analysis.get('value_proposition', '—')}")
+                st.markdown(f"- **Audience Size:** {analysis.get('target_audience', '—').capitalize()}")
+                st.markdown(f"- **Email Goal:** {analysis.get('email_goal', '—').capitalize()}")
+            with col_b:
+                st.markdown("**🎯 Email Strategy**")
+                st.markdown(f"- **Tone:** {analysis.get('tone', '—').capitalize()}")
+                st.markdown(f"- **Length:** {analysis.get('email_length', '—').capitalize()} ({analysis.get('word_range', '')})")
+                hooks = analysis.get('key_hooks', [])
+                if hooks:
+                    st.markdown("- **Key Hooks:**")
+                    for h in hooks:
+                        st.markdown(f"  - {h}")
+
+        st.markdown("---")
+        
+        # Action controls: Re-analyse (left) vs Generate (right)
+        col_ctrl1, col_ctrl2 = st.columns([1, 2])
+        
+        with col_ctrl1:
+            st.markdown("#### 🔄 Adjust Strategy")
+            st.write("Not satisfied with the analysis? Run the LangGraph agent again.")
+            reanalyze_clicked = st.button(
+                "🔄 Re-analyse Lead",
+                type="secondary",
+                key=f"{key_prefix}_reanalyze_btn"
+            )
+            if reanalyze_clicked:
+                log.info("Re-analyse Lead clicked | lead='%s'", lead_id)
+                with st.spinner("🔄 Re-running lead analyzer (LangGraph)…"):
+                    analysis = run_analyzer(lead)
+                    st.session_state[analysis_key] = analysis
+                    # Clear previous generated emails
+                    if session_key in st.session_state:
+                        del st.session_state[session_key]
+                    st.rerun()
+
+        with col_ctrl2:
+            st.markdown("#### 🚀 Cold Emails")
+            st.write("Ready to draft? Choose the number of email variations to generate.")
             
-    generate_clicked = st.button("Generate Email Variations", type="primary", key=f"{key_prefix}_generate_btn")
-    
-    if generate_clicked:
-        with st.spinner("Generating email variations..."):
-            emails = generate_mock_emails(company, role, skills, exp, num_variations)
-            st.session_state[session_key] = emails
-            st.success(f"🎉 Generated {len(emails)} variations!")
+            num_variations = st.radio(
+                "Number of email variations to generate:",
+                options=[1, 2, 3, 4, 5],
+                index=2,
+                horizontal=True,
+                key=f"{key_prefix}_num_vars"
+            )
             
+            generate_clicked = st.button(
+                "🚀 Generate Email Variations",
+                type="primary",
+                key=f"{key_prefix}_generate_btn"
+            )
+            
+            if generate_clicked:
+                log.info("Generate Email Variations clicked | variations=%d | lead='%s'", num_variations, lead_id)
+                with st.spinner("✍️ Generating email variations…"):
+                    emails = generate_mock_emails(company, role, skills, exp, num_variations)
+                    st.session_state[session_key] = emails
+                    st.rerun()
+
+    # ── Show generated emails (if available) ──────────────────────────────
     if session_key in st.session_state:
         emails = st.session_state[session_key]
         if emails:
+            st.markdown("---")
             st.markdown("#### 📄 Generated Email Variations")
             tabs = st.tabs([f"Variation {i+1}" for i in range(len(emails))])
             for i, tab in enumerate(tabs):
@@ -206,6 +302,7 @@ def render_email_generation_ui(lead, key_prefix):
                     email_data = emails[i]
                     st.markdown(f"**Subject:** {email_data['subject']}")
                     st.code(email_data['body'], language="text")
+
     st.markdown('</div>', unsafe_allow_html=True)
 
 # --- TAB 1: CSV IMPORT & PARSE ---
@@ -216,57 +313,68 @@ with tab_csv:
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
     
     if uploaded_file is not None:
-        try:
-            df = pd.read_csv(uploaded_file)
-            
-            columns = list(df.columns)
-            auto_mapping = auto_map_columns(columns)
-            
-            # Map columns silently behind the scenes
-            company_col = auto_mapping.get('company_name', columns[0] if columns else None)
-            email_col = auto_mapping.get('email', columns[0] if columns else None)
-            role_col = auto_mapping.get('target_role', columns[0] if columns else None)
-            focus_col = auto_mapping.get('company_focus', columns[0] if columns else None)
-            skills_col = auto_mapping.get('my_skills', columns[0] if columns else None)
-            exp_col = auto_mapping.get('experience_years', columns[0] if columns else None)
-            
-            # Map user selection to standard DataFrame
-            mapped_df = pd.DataFrame()
-            mapped_df['Company Name'] = df[company_col].astype(str)
-            mapped_df['Email'] = df[email_col].astype(str)
-            mapped_df['Target Role'] = df[role_col].astype(str)
-            mapped_df['Company Focus'] = df[focus_col].astype(str)
-            mapped_df['My Skills'] = df[skills_col].astype(str)
-            
-            # Safely parse experience to float
-            def parse_exp(val):
-                try:
-                    if pd.isna(val) or str(val).strip() == "":
+        if not st.session_state.get('csv_upload_saved'):
+            log.info("Processing new CSV upload: '%s'", uploaded_file.name)
+            try:
+                df = pd.read_csv(uploaded_file)
+                st.session_state['csv_columns'] = df.columns.tolist()
+                
+                # Auto-map columns
+                mapping = auto_map_columns(df.columns.tolist())
+                
+                # Create mapped dataframe for consistent display
+                company_col = mapping.get('company_name', df.columns[0])
+                email_col = mapping.get('email', df.columns[0])
+                role_col = mapping.get('target_role', df.columns[0])
+                focus_col = mapping.get('company_focus', df.columns[0])
+                skills_col = mapping.get('my_skills', df.columns[0])
+                exp_col = mapping.get('experience_years', df.columns[0])
+                
+                mapped_df = pd.DataFrame()
+                mapped_df['Company Name'] = df[company_col].astype(str)
+                mapped_df['Email'] = df[email_col].astype(str)
+                mapped_df['Target Role'] = df[role_col].astype(str)
+                mapped_df['Company Focus'] = df[focus_col].astype(str)
+                mapped_df['My Skills'] = df[skills_col].astype(str)
+                
+                def parse_exp(val):
+                    try:
+                        if pd.isna(val) or str(val).strip() == "": return 0.0
+                        nums = ''.join(c for c in str(val) if c.isdigit() or c == '.')
+                        return float(nums) if nums else 0.0
+                    except ValueError:
                         return 0.0
-                    # Extract numeric digits if someone typed "3 years"
-                    nums = ''.join(c for c in str(val) if c.isdigit() or c == '.')
-                    return float(nums) if nums else 0.0
-                except ValueError:
-                    return 0.0
-            
-            mapped_df['Experience (Years)'] = df[exp_col].apply(parse_exp)
-            
-            # Auto-save all leads to the database once per unique file upload
-            file_key = f"csv_saved_{uploaded_file.name}_{len(mapped_df)}"
-            if not st.session_state.get(file_key):
+                        
+                mapped_df['Experience (Years)'] = df[exp_col].apply(parse_exp)
+                st.session_state['csv_data'] = mapped_df
+                
+                st.success(f"Successfully loaded {len(df)} rows from {uploaded_file.name}")
+                
+                # Save immediately to DB
                 leads_to_save = []
                 for _, row in mapped_df.iterrows():
-                    leads_to_save.append({
+                    lead_data = {
                         'company_name': row['Company Name'],
                         'email': row['Email'],
                         'target_role': row['Target Role'],
                         'company_focus': row['Company Focus'],
                         'my_skills': row['My Skills'],
                         'experience_years': row['Experience (Years)']
-                    })
+                    }
+                    leads_to_save.append(lead_data)
+                
                 database.save_leads_batch(leads_to_save)
-                st.session_state[file_key] = True
-                st.success(f"🎉 {len(leads_to_save)} leads automatically saved to the database!")
+                st.session_state['csv_upload_saved'] = True
+                log.info("Successfully saved %d leads from CSV", len(leads_to_save))
+                
+            except Exception as e:
+                log.error("Failed to parse or save CSV '%s': %s", uploaded_file.name, e, exc_info=True)
+                st.error(f"Error parsing CSV: {str(e)}")
+
+        # Fetch latest mapped data for display
+        mapped_df = st.session_state.get('csv_data', pd.DataFrame())
+        
+        if not mapped_df.empty:
             
             # Render selection area
             st.markdown("### 📋 Parsed Leads List")
@@ -303,9 +411,6 @@ with tab_csv:
                 
                 # Render the email generation UI
                 render_email_generation_ui(chosen_lead, "csv")
-                    
-        except Exception as e:
-            st.error(f"Error parsing CSV file: {str(e)}")
 
 # --- TAB 2: MANUAL LEAD ENTRY ---
 with tab_manual:
@@ -359,8 +464,10 @@ with tab_manual:
                 errors.append("My Skills")
             
             if errors:
+                log.warning("Manual lead entry failed validation: missing/invalid %s", errors)
                 st.error("Please complete the following required fields:\n- " + "\n- ".join(errors))
             else:
+                log.info("Manual lead entry passed validation — saving '%s'", company_name)
                 database.save_lead(
                     company_name=company_name,
                     email=email,
@@ -431,7 +538,8 @@ with tab_db:
                 use_container_width=True,
                 hide_index=True,
                 on_select="rerun",
-                selection_mode="multi-row"
+                selection_mode="multi-row",
+                key="db_lead_table"
             )
             
             selected_db_rows = db_event.selection.rows
@@ -455,8 +563,6 @@ with tab_db:
                 
                 # Delete options
                 st.markdown("---")
-                selected_ids = db_df_display.iloc[selected_db_rows]['ID'].tolist()
-                st.warning(f"⚠️ You have selected {len(selected_ids)} lead(s) for deletion.")
                 if st.button("🗑️ Delete Selected Leads", key="btn_delete_db"):
                     database.delete_leads(selected_ids)
                     st.success("Selected leads deleted successfully!")
