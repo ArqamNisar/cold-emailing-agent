@@ -128,42 +128,56 @@ def email_writer_node(state: EmailWriterState) -> dict:
         state["company_name"], template.id, n,
     )
 
+    # Template-level config (take precedence over analyzer defaults)
+    eff_tone       = template.tone
+    eff_length     = template.length
+    eff_word_range = template.word_range
+
     # Build hooks as a bullet list for the prompt
     hooks = state.get("key_hooks", [])
-    hooks_text = "\n".join(f"  - {h}" for h in hooks) if hooks else "  - (none)"
+    hooks_text = "\n".join(f"  - {h}" for h in hooks) if hooks else "  - (none provided)"
+
+    # Build use-cases context
+    use_cases_text = "\n".join(f"  • {uc}" for uc in template.use_cases)
 
     system_prompt = (
-        "You are an elite cold-email copywriter. "
-        "You write concise, personalised, high-converting cold emails for job seekers "
-        "reaching out to companies for employment opportunities.\n\n"
+        "You are an elite cold-email copywriter specialising in high-converting, "
+        "personalised outreach emails.\n\n"
+        f"=== TEMPLATE CATEGORY : {template.category} ===\n"
+        f"Template Name : {template.name} ({template.style})\n"
+        f"Goal          : {template.tagline}\n\n"
+        f"When to use this template:\n{use_cases_text}\n\n"
+        f"--- Body Structure ---\n"
+        f"{template.body_template}\n\n"
+        f"--- Detailed Writing Rules ---\n"
         f"{template.structure_hint}\n\n"
-        "Additional writing constraints:\n"
-        f"  • Tone       : {state.get('tone', 'persuasive')}\n"
-        f"  • Length     : {state.get('email_length', 'medium')} ({state.get('word_range', '100–200 words')})\n"
-        "  • Every variation must have a UNIQUE subject line and noticeably different opening.\n"
-        "  • Personalise using the company's industry, value proposition, and focus.\n"
-        "  • The candidate is the one writing these emails (first-person).\n"
-        "  • Do NOT include placeholder text like [Your Name] — end the body naturally.\n"
+        "--- Global Writing Constraints ---\n"
+        f"  • Tone       : {eff_tone}\n"
+        f"  • Length     : {eff_length} ({eff_word_range})\n"
+        "  • Every variation MUST have a UNIQUE subject line and a noticeably different opening sentence.\n"
+        "  • Personalise deeply: weave in the company's name, industry, focus, and value proposition.\n"
+        "  • The sender is the CANDIDATE writing in first-person.\n"
+        "  • Do NOT include placeholder text like [Your Name] or [Link] — write naturally.\n"
         "  • Do NOT include any prose outside the JSON array in your response.\n\n"
         "Return ONLY a valid JSON array with this exact schema:\n"
         '[\n  {"subject": "...", "body": "..."},\n  ...\n]'
     )
 
     human_prompt = (
-        f"Generate {n} cold-email variation(s) using the approach above.\n\n"
-        "Candidate profile:\n"
-        f"  Name / sender : (candidate, writing in first person)\n"
-        f"  Skills        : {state['my_skills']}\n"
-        f"  Experience    : {state['experience_years']} years\n\n"
-        "Target company:\n"
-        f"  Company       : {state['company_name']}\n"
-        f"  Industry      : {state.get('company_industry', '')}\n"
-        f"  Value Prop    : {state.get('value_proposition', '')}\n"
-        f"  Focus         : {state['company_focus']}\n"
-        f"  Audience size : {state.get('target_audience', '')}\n"
-        f"  Email goal    : {state.get('email_goal', '')}\n"
-        f"  Target role   : {state['target_role']}\n\n"
-        f"Key hooks to weave in:\n{hooks_text}\n\n"
+        f"Generate {n} cold-email variation(s) following the template structure above.\n\n"
+        "--- Candidate Profile ---\n"
+        f"  Skills      : {state['my_skills']}\n"
+        f"  Experience  : {state['experience_years']} years\n\n"
+        "--- Target Company ---\n"
+        f"  Company     : {state['company_name']}\n"
+        f"  Industry    : {state.get('company_industry', '')}\n"
+        f"  Value Prop  : {state.get('value_proposition', '')}\n"
+        f"  Focus       : {state['company_focus']}\n"
+        f"  Audience    : {state.get('target_audience', '')}\n"
+        f"  Email Goal  : {state.get('email_goal', '')}\n"
+        f"  Target Role : {state['target_role']}\n\n"
+        f"--- Key Hooks to Weave In (from lead analysis) ---\n"
+        f"{hooks_text}\n\n"
         f"Return exactly {n} email object(s) in the JSON array. Nothing else."
     )
 
@@ -251,9 +265,10 @@ def run_email_writer(
         "value_proposition": str(analysis.get("value_proposition", "")),
         "target_audience":   str(analysis.get("target_audience", "")),
         "email_goal":        str(analysis.get("email_goal", "")),
-        "tone":              str(analysis.get("tone", "persuasive")),
-        "email_length":      str(analysis.get("email_length", "medium")),
-        "word_range":        str(analysis.get("word_range", "100–200 words")),
+        # Tone/length/word_range: template values take precedence over analyzer
+        "tone":              template.tone,
+        "email_length":      template.length,
+        "word_range":        template.word_range,
         "key_hooks":         list(analysis.get("key_hooks", [])),
 
         # Template + config

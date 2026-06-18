@@ -6,7 +6,10 @@ load_dotenv()
 import database
 from agents.analyzer_agent import run_analyzer
 from agents.email_writer_agent import run_email_writer
-from agents.email_templates import ALL_TEMPLATES, get_template
+from agents.email_templates import (
+    ALL_TEMPLATES, CATEGORIES, CATEGORY_ICONS,
+    get_template, get_templates_by_category
+)
 from logger import get_logger
 
 log = get_logger(__name__)
@@ -160,6 +163,32 @@ st.markdown("""
         color: #94a3b8;
         margin-bottom: 0.9rem;
     }
+    .template-card .tc-meta {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin-top: 0.55rem;
+    }
+    .tc-pill {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        font-size: 0.68rem;
+        font-weight: 600;
+        border-radius: 9999px;
+        letter-spacing: 0.02em;
+        text-transform: capitalize;
+    }
+    .tc-pill-tone  { background: rgba(99,102,241,0.18); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+    .tc-pill-len   { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+    .tc-pill-style { background: rgba(251,191,36,0.13); color: #fcd34d; border: 1px solid rgba(251,191,36,0.25); }
+    .tc-use-cases {
+        margin-top: 0.55rem;
+        padding-left: 1rem;
+        font-size: 0.72rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    .tc-use-cases li { margin-bottom: 0.1rem; }
     @media (max-width: 900px) {
         .template-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -360,48 +389,61 @@ def render_email_generation_ui(lead, key_prefix):
                 key=f"{key_prefix}_num_vars"
             )
 
-        # ── Template Library ──────────────────────────────────────────────
+        # ── Template Library ─────────────────────────────────────────────
         st.markdown("---")
-        st.markdown('<p class="template-section-header">📚 Choose an Email Approach</p>', unsafe_allow_html=True)
-        st.markdown('<p class="template-section-sub">Select the style that best fits your outreach strategy. The AI writer will follow this template structure when drafting your emails.</p>', unsafe_allow_html=True)
+        st.markdown('<p class="template-section-header">📚 Template Library — Choose Your Email Approach</p>', unsafe_allow_html=True)
+        st.markdown('<p class="template-section-sub">Browse templates by category. Each template defines the structure, tone, and style the AI writer will follow when generating your emails.</p>', unsafe_allow_html=True)
 
-        # Render 6 template cards — 3 per row using st.columns
         current_template_id = st.session_state.get(template_key, ALL_TEMPLATES[0].id)
-        cols_row1 = st.columns(3)
-        cols_row2 = st.columns(3)
-        all_cols  = cols_row1 + cols_row2
 
-        for idx, tmpl in enumerate(ALL_TEMPLATES):
-            is_selected = (tmpl.id == current_template_id)
-            selected_badge = '<span class="tc-selected-badge">✓ Selected</span>' if is_selected else ''
-            card_class = 'template-card selected' if is_selected else 'template-card'
-            with all_cols[idx]:
-                st.markdown(
-                    f"""
-                    <div class="{card_class}">
-                        {selected_badge}
-                        <span class="tc-icon">{tmpl.icon}</span>
-                        <div class="tc-name">{tmpl.name}</div>
-                        <div class="tc-tagline">{tmpl.tagline}</div>
-                        <div class="tc-example">"{tmpl.example_opening[:70]}{'…' if len(tmpl.example_opening) > 70 else ''}"</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
-                # One button per card to select it
-                btn_label = "✓ Selected" if is_selected else "Select"
-                btn_type  = "primary" if is_selected else "secondary"
-                if st.button(btn_label, key=f"{key_prefix}_tmpl_{tmpl.id}", type=btn_type, use_container_width=True):
-                    st.session_state[template_key] = tmpl.id
-                    # Clear previously generated emails when template changes
-                    if session_key in st.session_state:
-                        del st.session_state[session_key]
-                    st.rerun()
+        # Category tabs — one tab per category
+        cat_tab_labels = [
+            f"{CATEGORY_ICONS[cat]} {cat}" for cat in CATEGORIES
+        ]
+        cat_tabs = st.tabs(cat_tab_labels)
 
-        # Confirmation strip
+        for cat_tab, category in zip(cat_tabs, CATEGORIES):
+            with cat_tab:
+                cat_templates = get_templates_by_category(category)
+                # 2 cards per row
+                for row_start in range(0, len(cat_templates), 2):
+                    row_tmpls = cat_templates[row_start : row_start + 2]
+                    cols = st.columns(len(row_tmpls))
+                    for col, tmpl in zip(cols, row_tmpls):
+                        is_selected = (tmpl.id == current_template_id)
+                        selected_badge = '<span class="tc-selected-badge">✓ Selected</span>' if is_selected else ''
+                        card_class = 'template-card selected' if is_selected else 'template-card'
+                        use_cases_html = ''.join(f'<li>{uc}</li>' for uc in tmpl.use_cases)
+                        example_short = tmpl.example_opening[:90] + ('…' if len(tmpl.example_opening) > 90 else '')
+                        with col:
+                            st.markdown(
+                                f"""<div class="{card_class}">
+    {selected_badge}
+    <span class="tc-icon">{tmpl.icon}</span>
+    <div class="tc-name">{tmpl.name}</div>
+    <div class="tc-tagline">{tmpl.tagline}</div>
+    <div class="tc-meta">
+        <span class="tc-pill tc-pill-style">{tmpl.style}</span>
+        <span class="tc-pill tc-pill-tone">{tmpl.tone}</span>
+        <span class="tc-pill tc-pill-len">{tmpl.length} · {tmpl.word_range}</span>
+    </div>
+    <ul class="tc-use-cases">{use_cases_html}</ul>
+    <div class="tc-example">"{example_short}"</div>
+</div>""",
+                                unsafe_allow_html=True,
+                            )
+                            btn_label = "✓ Selected" if is_selected else "Use This Template"
+                            btn_type  = "primary" if is_selected else "secondary"
+                            if st.button(btn_label, key=f"{key_prefix}_tmpl_{tmpl.id}", type=btn_type, use_container_width=True):
+                                st.session_state[template_key] = tmpl.id
+                                if session_key in st.session_state:
+                                    del st.session_state[session_key]
+                                st.rerun()
+
+        # Confirmation strip showing active template details
         active_tmpl = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
         st.markdown(
-            f'<div class="badge">{active_tmpl.icon} {active_tmpl.name} approach selected</div>',
+            f'<div class="badge">{active_tmpl.icon} {active_tmpl.name} &nbsp;·&nbsp; {active_tmpl.tone.capitalize()} &nbsp;·&nbsp; {active_tmpl.word_range}</div>',
             unsafe_allow_html=True,
         )
 
