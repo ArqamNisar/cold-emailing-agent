@@ -717,3 +717,306 @@ langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling mo
 2026-06-17 15:40:50 | DEBUG    | cold_email.database                 | Database initialised successfully
 2026-06-17 15:40:51 | DEBUG    | cold_email.database                 | Fetching all leads from database
 2026-06-17 15:40:51 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 10:45:01 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-18 10:45:10 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 10:45:10 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 10:45:11 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 10:45:11 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 10:45:13 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 10:45:13 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:12:23 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-18 11:12:34 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:12:34 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:12:34 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:12:34 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:12:35 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:12:35 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:12:59 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:12:59 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:12:59 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:12:59 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:13:02 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:13:02 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:13:02 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:13:02 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:13:02 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Apple_iOS Engineer'
+2026-06-18 11:13:02 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-18 11:13:02 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-18 11:13:02 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Apple' role='iOS Engineer'
+2026-06-18 11:13:02 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Apple' role='iOS Engineer'
+2026-06-18 11:13:02 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-18 11:13:05 | ERROR    | cold_email.analyzer_agent           | [input_analyzer] FAILED with error: Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+Traceback (most recent call last):
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\models.py", line 6480, in generate_content
+    response = self._generate_content(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+  File "H:\Arqam Data\crew_venv\lib\concurrent\futures\_base.py", line 438, in result
+    return self.__get_result()
+  File "H:\Arqam Data\crew_venv\lib\concurrent\futures\_base.py", line 390, in __get_result
+    raise self._exception
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1381, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\errors.py", line 155, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\errors.py", line 184, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\AI Agents projects\cold-emailing-agent\agents\analyzer_agent.py", line 133, in input_analyzer_node
+    response = llm.invoke([
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 3238, in _generate
+    _handle_client_error(e, request)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 169, in _handle_client_error
+    raise ChatGoogleGenerativeAIError(msg) from e
+langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+2026-06-18 11:13:05 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Technology' goal='recruitment'
+2026-06-18 11:13:05 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-18 11:13:07 | ERROR    | cold_email.analyzer_agent           | [strategy_planner] FAILED with error: Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+Traceback (most recent call last):
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\models.py", line 6480, in generate_content
+    response = self._generate_content(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+  File "H:\Arqam Data\crew_venv\lib\concurrent\futures\_base.py", line 438, in result
+    return self.__get_result()
+  File "H:\Arqam Data\crew_venv\lib\concurrent\futures\_base.py", line 390, in __get_result
+    raise self._exception
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1381, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\errors.py", line 155, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\errors.py", line 184, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\AI Agents projects\cold-emailing-agent\agents\analyzer_agent.py", line 204, in strategy_planner_node
+    response = llm.invoke([
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 3238, in _generate
+    _handle_client_error(e, request)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 169, in _handle_client_error
+    raise ChatGoogleGenerativeAIError(msg) from e
+langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+2026-06-18 11:13:07 | WARNING  | cold_email.analyzer_agent           | Analyzer completed with error(s): Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+2026-06-18 11:13:07 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:13:07 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:13:07 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:13:07 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:17:01 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:17:01 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:17:01 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:17:01 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:17:01 | INFO     | cold_email.__main__                 | Re-analyse Lead clicked | lead='Apple_iOS Engineer'
+2026-06-18 11:17:01 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Apple' role='iOS Engineer'
+2026-06-18 11:17:01 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Apple' role='iOS Engineer'
+2026-06-18 11:17:01 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-18 11:17:27 | ERROR    | cold_email.analyzer_agent           | [input_analyzer] FAILED with error: Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API Key not found. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API Key not found. Please pass a valid API key.'}]}}
+Traceback (most recent call last):
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\models.py", line 6480, in generate_content
+    response = self._generate_content(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+  File "H:\Arqam Data\crew_venv\lib\concurrent\futures\_base.py", line 438, in result
+    return self.__get_result()
+  File "H:\Arqam Data\crew_venv\lib\concurrent\futures\_base.py", line 390, in __get_result
+    raise self._exception
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1381, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\errors.py", line 155, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\errors.py", line 184, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API Key not found. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API Key not found. Please pass a valid API key.'}]}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\AI Agents projects\cold-emailing-agent\agents\analyzer_agent.py", line 133, in input_analyzer_node
+    response = llm.invoke([
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 3238, in _generate
+    _handle_client_error(e, request)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 169, in _handle_client_error
+    raise ChatGoogleGenerativeAIError(msg) from e
+langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API Key not found. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API Key not found. Please pass a valid API key.'}]}}
+2026-06-18 11:17:27 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Technology' goal='recruitment'
+2026-06-18 11:17:27 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-18 11:18:31 | ERROR    | cold_email.analyzer_agent           | [strategy_planner] FAILED with error: Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API Key not found. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API Key not found. Please pass a valid API key.'}]}}
+Traceback (most recent call last):
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\models.py", line 6480, in generate_content
+    response = self._generate_content(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+  File "H:\Arqam Data\crew_venv\lib\concurrent\futures\_base.py", line 438, in result
+    return self.__get_result()
+  File "H:\Arqam Data\crew_venv\lib\concurrent\futures\_base.py", line 390, in __get_result
+    raise self._exception
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\_api_client.py", line 1381, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\errors.py", line 155, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\google\genai\errors.py", line 184, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API Key not found. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API Key not found. Please pass a valid API key.'}]}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\AI Agents projects\cold-emailing-agent\agents\analyzer_agent.py", line 204, in strategy_planner_node
+    response = llm.invoke([
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_core\language_models\chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 3238, in _generate
+    _handle_client_error(e, request)
+  File "D:\AI Agents projects\cold-emailing-agent\venv\lib\site-packages\langchain_google_genai\chat_models.py", line 169, in _handle_client_error
+    raise ChatGoogleGenerativeAIError(msg) from e
+langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API Key not found. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API Key not found. Please pass a valid API key.'}]}}
+2026-06-18 11:18:31 | WARNING  | cold_email.analyzer_agent           | Analyzer completed with error(s): Error calling model 'gemini-2.5-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API Key not found. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API Key not found. Please pass a valid API key.'}]}}
+2026-06-18 11:18:31 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:18:31 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:18:32 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:18:32 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:22:08 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-18 11:22:15 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:22:15 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:22:16 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:22:16 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:22:26 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:22:26 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:22:26 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:22:26 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:22:33 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:22:33 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:22:33 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:22:33 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:22:33 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Apple_iOS Engineer'
+2026-06-18 11:22:33 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-18 11:22:33 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-18 11:22:33 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Apple' role='iOS Engineer'
+2026-06-18 11:22:33 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Apple' role='iOS Engineer'
+2026-06-18 11:22:33 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-18 11:23:20 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Technology",
+  "value_proposition": "Apple designs and manufactures consumer electronics, computer software, and online services.",
+  "target_audience": "enterprise",
+  "email_goal": "recruitment"
+}
+```
+2026-06-18 11:23:20 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Technology' goal='recruitment' audience='enterprise'
+2026-06-18 11:23:20 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Technology' goal='recruitment'
+2026-06-18 11:23:20 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-18 11:23:27 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "medium",
+  "word_range": "100–200 words",
+  "key_hooks": [
+    "Specialized CoreML expertise directly applicable to on-device ML initiatives.",
+    "Strong proficiency in Swift and Objective-C, foundational for iOS development.",
+    "Practical ex
+2026-06-18 11:23:27 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='medium' hooks=4
+2026-06-18 11:23:27 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='medium'
+2026-06-18 11:23:27 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:23:27 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:23:27 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:23:27 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database

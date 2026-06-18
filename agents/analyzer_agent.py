@@ -37,7 +37,6 @@ class LeadAnalysisState(TypedDict):
     company_focus: str
     my_skills: str
     experience_years: float
-    api_key: str                        # passed in at invocation time
 
     # ── Phase 1: Input Analysis (populated by input_analyzer) ──────────────
     company_industry: str               # e.g. "Artificial Intelligence"
@@ -59,9 +58,9 @@ class LeadAnalysisState(TypedDict):
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _get_llm(api_key: str = "") -> ChatGoogleGenerativeAI:
-    """Return a Gemini 2.5 Flash chat model using the provided key."""
-    key = api_key.strip() if api_key else (os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY", ""))
+def _get_llm() -> ChatGoogleGenerativeAI:
+    """Return a Gemini 2.5 Flash chat model, always sourcing the key from the .env file."""
+    key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY", "")
     return ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
         google_api_key=key,
@@ -130,7 +129,7 @@ Return ONLY the JSON object, nothing else."""
 
     try:
         log.debug("[input_analyzer] Invoking Gemini LLM")
-        llm = _get_llm(state["api_key"])
+        llm = _get_llm()
         response = llm.invoke([
             SystemMessage(content=system_prompt),
             HumanMessage(content=human_prompt),
@@ -201,7 +200,7 @@ Return ONLY the JSON object, nothing else."""
 
     try:
         log.debug("[strategy_planner] Invoking Gemini LLM")
-        llm = _get_llm(state["api_key"])
+        llm = _get_llm()
         response = llm.invoke([
             SystemMessage(content=system_prompt),
             HumanMessage(content=human_prompt),
@@ -260,19 +259,23 @@ def build_analyzer_graph():
 _graph = None
 
 
-def run_analyzer(lead: dict, api_key: str = "") -> LeadAnalysisState:
+def run_analyzer(lead: dict) -> LeadAnalysisState:
     """
     Entry point called from the Streamlit app.
 
     Parameters
     ----------
-    lead    : dict with keys matching the lead fields (both display-name and
-              snake_case variants are accepted).
-    api_key : Gemini/Google API key (overrides environment variable).
+    lead : dict with keys matching the lead fields (both display-name and
+           snake_case variants are accepted).
 
     Returns
     -------
     Populated LeadAnalysisState dict.
+
+    Note
+    ----
+    The API key is always read from the environment (GOOGLE_API_KEY or
+    GEMINI_API_KEY) as loaded by python-dotenv at module import time.
     """
     global _graph
     if _graph is None:
@@ -293,7 +296,6 @@ def run_analyzer(lead: dict, api_key: str = "") -> LeadAnalysisState:
         "company_focus": str(_get(lead, "Company Focus", "company_focus")),
         "my_skills": str(_get(lead, "My Skills", "my_skills")),
         "experience_years": float(_get(lead, "Experience (Years)", "experience_years") or 0),
-        "api_key": api_key,
         # Phase 1 — will be populated by input_analyzer
         "company_industry": "",
         "value_proposition": "",
@@ -307,9 +309,8 @@ def run_analyzer(lead: dict, api_key: str = "") -> LeadAnalysisState:
         "error": None,
     }
 
-    log.info("Invoking analyzer graph | company='%s' role='%s' api_key_set=%s",
-             initial_state["company_name"], initial_state["target_role"],
-             bool(api_key.strip() if api_key else ""))
+    log.info("Invoking analyzer graph | company='%s' role='%s'",
+             initial_state["company_name"], initial_state["target_role"])
 
     result = _graph.invoke(initial_state)
 
