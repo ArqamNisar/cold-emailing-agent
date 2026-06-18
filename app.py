@@ -5,6 +5,8 @@ load_dotenv()
 
 import database
 from agents.analyzer_agent import run_analyzer
+from agents.email_writer_agent import run_email_writer
+from agents.email_templates import ALL_TEMPLATES, get_template
 from logger import get_logger
 
 log = get_logger(__name__)
@@ -82,6 +84,88 @@ st.markdown("""
         border-radius: 9999px;
         margin-bottom: 1rem;
     }
+
+    /* ── Template Library Cards ─────────────────────────────────────── */
+    .template-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin: 1rem 0 1.5rem 0;
+    }
+    .template-card {
+        background: rgba(30, 41, 59, 0.55);
+        border: 1.5px solid rgba(255, 255, 255, 0.07);
+        border-radius: 14px;
+        padding: 1.2rem 1rem;
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        position: relative;
+        min-height: 130px;
+    }
+    .template-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(99, 102, 241, 0.45);
+        box-shadow: 0 8px 28px rgba(99, 102, 241, 0.18);
+    }
+    .template-card.selected {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35), 0 8px 28px rgba(99, 102, 241, 0.25);
+        background: rgba(99, 102, 241, 0.12);
+    }
+    .template-card .tc-icon {
+        font-size: 1.8rem;
+        margin-bottom: 0.4rem;
+        display: block;
+    }
+    .template-card .tc-name {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #e2e8f0;
+        margin-bottom: 0.3rem;
+    }
+    .template-card .tc-tagline {
+        font-size: 0.78rem;
+        color: #94a3b8;
+        line-height: 1.4;
+    }
+    .template-card .tc-example {
+        margin-top: 0.6rem;
+        font-size: 0.72rem;
+        color: #6366f1;
+        font-style: italic;
+        border-left: 2px solid rgba(99,102,241,0.4);
+        padding-left: 0.5rem;
+        line-height: 1.35;
+    }
+    .template-card .tc-selected-badge {
+        position: absolute;
+        top: 0.55rem;
+        right: 0.65rem;
+        background: #6366f1;
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 0.15rem 0.45rem;
+        border-radius: 9999px;
+        letter-spacing: 0.03em;
+    }
+    .template-section-header {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #e2e8f0;
+        margin-bottom: 0.25rem;
+    }
+    .template-section-sub {
+        font-size: 0.82rem;
+        color: #94a3b8;
+        margin-bottom: 0.9rem;
+    }
+    @media (max-width: 900px) {
+        .template-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+        .template-grid { grid-template-columns: 1fr; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -93,14 +177,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ── Sidebar ──────────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown("## ⚙️ Settings")
-    st.markdown("---")
-    st.markdown("#### 📖 About")
-    st.write("Powered by **LangGraph** + **Gemini 2.5 Flash**. "
-             "The analyzer agent parses each lead and decides the optimal tone, "
-             "length and hooks before generating email variations.")
 
 # Setup navigation tabs
 tab_csv, tab_manual, tab_db = st.tabs([
@@ -145,28 +221,30 @@ def auto_map_columns(columns):
             
     return mapping
 
+
 def generate_mock_emails(company, role, skills, experience, num_variations):
-    log.info("Generating %d mock emails | company='%s' role='%s'", num_variations, company, role)
+    """Fallback mock generator used when the LLM writer agent fails."""
+    log.info("Generating %d MOCK emails | company='%s' role='%s'", num_variations, company, role)
     variations = [
         {
             "subject": f"Inquiry: Connecting regarding {role} roles at {company}",
-            "body": f"Hi team,\n\nI hope you're doing well.\n\nI've been following {company}'s work in engineering and was very impressed by your progress. I noticed you are expanding your team for {role} positions.\n\nWith {experience} years of experience specializing in {skills}, I have built similar systems and would love to see if I could add value to your team. Are you open to a brief chat next week to discuss potential alignment?\n\nBest regards,\n[Your Name]"
+            "body": f"Hi team,\n\nI hope you're doing well.\n\nI've been following {company}'s work and was very impressed by your progress. I noticed you are expanding your team for {role} positions.\n\nWith {experience} years of experience specialising in {skills}, I have built similar systems and would love to see if I could add value to your team. Are you open to a brief chat next week?\n\nBest regards"
         },
         {
             "subject": f"Interested in {role} opportunities at {company}",
-            "body": f"Hello,\n\nI hope this email finds you well.\n\nI am reaching out because I am very interested in the {role} position at {company}. I have spent the last {experience} years honing my skills in {skills}, and I am confident that my background aligns well with your team's current focus.\n\nI would appreciate the opportunity to connect and learn more about what you're building. Please let me know if you have 10 minutes to sync.\n\nThanks,\n[Your Name]"
+            "body": f"Hello,\n\nI am reaching out because I am very interested in the {role} position at {company}. I have spent the last {experience} years honing my skills in {skills}, and I am confident that my background aligns well with your team's current focus.\n\nI would appreciate the opportunity to connect and learn more about what you're building. Please let me know if you have 10 minutes to sync.\n\nThanks"
         },
         {
             "subject": f"Skills match for {role} at {company}",
-            "body": f"Hi there,\n\nI'm writing to express my interest in the {role} opening at {company}.\n\nGiven my experience ({experience} years) with {skills}, I am excited about the prospect of contributing to {company}'s upcoming milestones.\n\nWould you be open to a quick call to explore how my skills could support your engineering goals?\n\nSincerely,\n[Your Name]"
+            "body": f"Hi there,\n\nI'm writing to express my interest in the {role} opening at {company}.\n\nGiven my experience ({experience} years) with {skills}, I am excited about the prospect of contributing to {company}'s upcoming milestones.\n\nWould you be open to a quick call to explore how my skills could support your goals?\n\nSincerely"
         },
         {
-            "subject": f"Let's connect / {role} search at {company}",
-            "body": f"Hi,\n\nI hope your week is going well.\n\nI'm a software engineer with {experience} years of experience, and I've been looking closely at the {role} position at {company}.\n\nMy core technical expertise includes {skills}, which seems to be a strong fit for your current engineering stack.\n\nDo you have a few minutes for a quick introductory call next Tuesday?\n\nWarmly,\n[Your Name]"
+            "subject": f"Let's connect — {role} at {company}",
+            "body": f"Hi,\n\nI'm a professional with {experience} years of experience and I've been looking closely at the {role} position at {company}.\n\nMy core expertise includes {skills}, which seems to be a strong fit for your current needs.\n\nDo you have a few minutes for a quick introductory call?\n\nWarmly"
         },
         {
             "subject": f"Value proposition for {company}'s {role} opening",
-            "body": f"Dear Hiring Team,\n\nI hope you are having a productive week.\n\nI am reaching out to highlight my candidacy for the {role} position at {company}. With a track record of {experience} years working with tools like {skills}, I can jump in and contribute immediately.\n\nI'd love to share more about how my profile fits your current needs. Let me know if we can connect.\n\nBest,\n[Your Name]"
+            "body": f"Dear Hiring Team,\n\nI am reaching out to highlight my candidacy for the {role} position at {company}. With a track record of {experience} years working with {skills}, I can jump in and contribute immediately.\n\nI'd love to share more about how my profile fits your current needs. Let me know if we can connect.\n\nBest"
         }
     ]
     return variations[:num_variations]
@@ -193,6 +271,11 @@ def render_email_generation_ui(lead, key_prefix):
         for k in (session_key, analysis_key):
             if k in st.session_state:
                 del st.session_state[k]
+
+    # ── Template selection state key (per tab prefix) ────────────────────
+    template_key = f"{key_prefix}_selected_template"
+    if template_key not in st.session_state:
+        st.session_state[template_key] = ALL_TEMPLATES[0].id   # default: Value Prop
 
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown(f"### ✉️ Create Emails for **{company}**")
@@ -276,26 +359,90 @@ def render_email_generation_ui(lead, key_prefix):
                 horizontal=True,
                 key=f"{key_prefix}_num_vars"
             )
-            
-            generate_clicked = st.button(
-                "🚀 Generate Email Variations",
-                type="primary",
-                key=f"{key_prefix}_generate_btn"
-            )
-            
-            if generate_clicked:
-                log.info("Generate Email Variations clicked | variations=%d | lead='%s'", num_variations, lead_id)
-                with st.spinner("✍️ Generating email variations…"):
-                    emails = generate_mock_emails(company, role, skills, exp, num_variations)
-                    st.session_state[session_key] = emails
+
+        # ── Template Library ──────────────────────────────────────────────
+        st.markdown("---")
+        st.markdown('<p class="template-section-header">📚 Choose an Email Approach</p>', unsafe_allow_html=True)
+        st.markdown('<p class="template-section-sub">Select the style that best fits your outreach strategy. The AI writer will follow this template structure when drafting your emails.</p>', unsafe_allow_html=True)
+
+        # Render 6 template cards — 3 per row using st.columns
+        current_template_id = st.session_state.get(template_key, ALL_TEMPLATES[0].id)
+        cols_row1 = st.columns(3)
+        cols_row2 = st.columns(3)
+        all_cols  = cols_row1 + cols_row2
+
+        for idx, tmpl in enumerate(ALL_TEMPLATES):
+            is_selected = (tmpl.id == current_template_id)
+            selected_badge = '<span class="tc-selected-badge">✓ Selected</span>' if is_selected else ''
+            card_class = 'template-card selected' if is_selected else 'template-card'
+            with all_cols[idx]:
+                st.markdown(
+                    f"""
+                    <div class="{card_class}">
+                        {selected_badge}
+                        <span class="tc-icon">{tmpl.icon}</span>
+                        <div class="tc-name">{tmpl.name}</div>
+                        <div class="tc-tagline">{tmpl.tagline}</div>
+                        <div class="tc-example">"{tmpl.example_opening[:70]}{'…' if len(tmpl.example_opening) > 70 else ''}"</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                # One button per card to select it
+                btn_label = "✓ Selected" if is_selected else "Select"
+                btn_type  = "primary" if is_selected else "secondary"
+                if st.button(btn_label, key=f"{key_prefix}_tmpl_{tmpl.id}", type=btn_type, use_container_width=True):
+                    st.session_state[template_key] = tmpl.id
+                    # Clear previously generated emails when template changes
+                    if session_key in st.session_state:
+                        del st.session_state[session_key]
                     st.rerun()
+
+        # Confirmation strip
+        active_tmpl = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
+        st.markdown(
+            f'<div class="badge">{active_tmpl.icon} {active_tmpl.name} approach selected</div>',
+            unsafe_allow_html=True,
+        )
+
+        # ── Generate button (placed after template selection) ──────────────
+        st.markdown("")
+        generate_clicked = st.button(
+            "🚀 Generate Email Variations",
+            type="primary",
+            key=f"{key_prefix}_generate_btn"
+        )
+
+        if generate_clicked:
+            chosen_template = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
+            log.info(
+                "Generate clicked | variations=%d | lead='%s' | template='%s'",
+                num_variations, lead_id, chosen_template.id,
+            )
+            with st.spinner(f"✍️ Writing emails using *{chosen_template.name}* approach…"):
+                try:
+                    emails = run_email_writer(
+                        lead=lead,
+                        analysis=st.session_state[analysis_key],
+                        template=chosen_template,
+                        num_variations=num_variations,
+                    )
+                    log.info("Email writer returned %d email(s)", len(emails))
+                except Exception as writer_err:
+                    log.warning("Email writer failed (%s) — falling back to mock", writer_err)
+                    st.warning(f"⚠️ AI writer encountered an issue — showing template-based drafts instead.")
+                    emails = generate_mock_emails(company, role, skills, exp, num_variations)
+
+                st.session_state[session_key] = emails
+                st.rerun()
 
     # ── Show generated emails (if available) ──────────────────────────────
     if session_key in st.session_state:
         emails = st.session_state[session_key]
         if emails:
             st.markdown("---")
-            st.markdown("#### 📄 Generated Email Variations")
+            active_tmpl_display = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
+            st.markdown(f"#### 📄 Generated Email Variations &nbsp; <span style='font-size:0.8rem;color:#6366f1;font-weight:600;'>{active_tmpl_display.icon} {active_tmpl_display.name}</span>", unsafe_allow_html=True)
             tabs = st.tabs([f"Variation {i+1}" for i in range(len(emails))])
             for i, tab in enumerate(tabs):
                 with tab:

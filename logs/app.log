@@ -1020,3 +1020,55 @@ langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling mo
 2026-06-18 11:23:27 | DEBUG    | cold_email.database                 | Database initialised successfully
 2026-06-18 11:23:27 | DEBUG    | cold_email.database                 | Fetching all leads from database
 2026-06-18 11:23:27 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:30:10 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:30:10 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:30:10 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:30:10 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 11:30:22 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 11:30:22 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 11:30:22 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 11:30:22 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 12:56:43 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 12:56:43 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 12:56:43 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 12:56:43 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 12:57:57 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 12:57:57 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 12:57:58 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 12:57:58 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 12:58:00 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 12:58:00 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 12:58:00 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 12:58:00 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 12:58:00 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Netflix_Backend Engineer'
+2026-06-18 12:58:00 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-18 12:58:00 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-18 12:58:00 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Netflix' role='Backend Engineer'
+2026-06-18 12:58:00 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Netflix' role='Backend Engineer'
+2026-06-18 12:58:00 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-18 12:58:24 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Streaming Entertainment",
+  "value_proposition": "Netflix offers a subscription service for streaming movies and TV shows to a global audience.",
+  "target_audience": "enterprise",
+  "email_goal": "recruitment"
+}
+```
+2026-06-18 12:58:24 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Streaming Entertainment' goal='recruitment' audience='enterprise'
+2026-06-18 12:58:24 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Streaming Entertainment' goal='recruitment'
+2026-06-18 12:58:24 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-18 12:58:31 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "short",
+  "word_range": "<100 words",
+  "key_hooks": [
+    "Opportunity to build high-scale streaming infrastructure impacting millions globally.",
+    "Leverage your Java and AWS expertise on cutting-edge backend systems.",
+    "Solve complex, di
+2026-06-18 12:58:31 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='short' hooks=4
+2026-06-18 12:58:31 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='short'
+2026-06-18 12:58:31 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 12:58:31 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 12:58:31 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 12:58:31 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
