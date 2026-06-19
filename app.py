@@ -209,9 +209,9 @@ st.markdown("""
 
 # Setup navigation tabs
 tab_csv, tab_manual, tab_db = st.tabs([
-    "📥 CSV Import & Parse", 
-    "📝 Manual Lead Entry", 
-    "🗂️ Leads Database Explorer"
+    "📥 Upload Leads", 
+    "📝 Add Lead", 
+    "🗂️ Leads"
 ])
 
 def auto_map_columns(columns):
@@ -361,7 +361,7 @@ def render_email_generation_ui(lead, key_prefix):
         
         with col_ctrl1:
             st.markdown("#### 🔄 Adjust Strategy")
-            st.write("Not satisfied with the analysis? Run the LangGraph agent again.")
+            st.write("Not satisfied with the analysis? Run the agent again.")
             reanalyze_clicked = st.button(
                 "🔄 Re-analyse Lead",
                 type="secondary",
@@ -499,6 +499,36 @@ with tab_csv:
     st.markdown("### 📥 Import Leads from CSV")
     st.write("Upload a CSV file — all leads will be automatically saved to the database. Select any lead from the table to generate email variations.")
     
+    # Sample CSV Template Guide
+    with st.expander("💡 View & Download Sample CSV Template", expanded=False):
+        st.write("Your CSV file should have headers matching or similar to the example below. The importer will attempt to automatically map your columns:")
+        try:
+            sample_df = pd.read_csv("sample_leads.csv")
+            st.dataframe(sample_df, hide_index=True, use_container_width=True)
+            with open("sample_leads.csv", "rb") as f:
+                sample_bytes = f.read()
+        except Exception as e:
+            # Fallback inline data
+            sample_df = pd.DataFrame({
+                "Company": ["Google", "Microsoft"],
+                "Email": ["recruiting@google.com", "hiring@microsoft.com"],
+                "Role": ["AI Developer", "Software Engineer"],
+                "Focus Areas": ["Search and AI research", "Cloud and AI systems"],
+                "Skills": ["Python, PyTorch, Jax", "C#, Python, Azure"],
+                "Years Exp": [3.5, 5.0]
+            })
+            st.dataframe(sample_df, hide_index=True, use_container_width=True)
+            sample_bytes = sample_df.to_csv(index=False).encode('utf-8')
+            
+        st.download_button(
+            label="📥 Download Sample CSV Template",
+            data=sample_bytes,
+            file_name="sample_leads.csv",
+            mime="text/csv",
+            key="download_sample_csv"
+        )
+        
+    st.write("")
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
     
     if uploaded_file is not None:
