@@ -1072,3 +1072,193 @@ langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling mo
 2026-06-18 12:58:31 | DEBUG    | cold_email.database                 | Database initialised successfully
 2026-06-18 12:58:31 | DEBUG    | cold_email.database                 | Fetching all leads from database
 2026-06-18 12:58:31 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:12:50 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:12:50 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:12:50 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:12:50 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:12:58 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:12:58 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:12:58 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:12:58 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:13:01 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:13:01 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:13:01 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:13:01 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:13:01 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Apple_iOS Engineer'
+2026-06-18 13:13:01 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-18 13:13:01 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-18 13:13:01 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Apple' role='iOS Engineer'
+2026-06-18 13:13:01 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Apple' role='iOS Engineer'
+2026-06-18 13:13:01 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-18 13:13:25 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Technology",
+  "value_proposition": "Apple designs, manufactures, and markets consumer electronics, computer software, and online services, focusing on innovation and user experience.",
+  "target_audience": "enterprise",
+  "email_goal": "recruitment"
+}
+```
+2026-06-18 13:13:25 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Technology' goal='recruitment' audience='enterprise'
+2026-06-18 13:13:25 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Technology' goal='recruitment'
+2026-06-18 13:13:25 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-18 13:13:31 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "short",
+  "word_range": "<100 words",
+  "key_hooks": [
+    "Direct experience with CoreML for on-device ML, aligning with Apple's strategic focus.",
+    "Proficiency in Swift and Objective-C, essential for iOS engineering roles.",
+    "Passion for
+2026-06-18 13:13:31 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='short' hooks=4
+2026-06-18 13:13:31 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='short'
+2026-06-18 13:13:31 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:13:31 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:13:31 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:13:31 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:13:47 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:13:47 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:13:47 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:13:47 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:13:47 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:13:47 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:13:47 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:13:47 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:13:52 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:13:52 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:13:52 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:13:52 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:13:53 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:13:53 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:13:53 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:13:53 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:13:58 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:13:58 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:13:58 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:13:58 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:13:58 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:13:58 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:13:58 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:13:58 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:18:56 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:18:56 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:18:56 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:18:56 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:19:04 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:19:04 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:19:04 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:19:04 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:19:06 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:19:06 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:19:06 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:19:06 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:19:07 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Apple_iOS Engineer'
+2026-06-18 13:19:07 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-18 13:19:07 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-18 13:19:07 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Apple' role='iOS Engineer'
+2026-06-18 13:19:07 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Apple' role='iOS Engineer'
+2026-06-18 13:19:07 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-18 13:19:54 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Technology",
+  "value_proposition": "Apple designs and manufactures consumer electronics, computer software, and online services, with a focus on integrating advanced on-device machine learning.",
+  "target_audience": "enterprise",
+  "email_goal": "recruitment"
+}
+```
+2026-06-18 13:19:54 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Technology' goal='recruitment' audience='enterprise'
+2026-06-18 13:19:54 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Technology' goal='recruitment'
+2026-06-18 13:19:54 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-18 13:21:02 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "medium",
+  "word_range": "100–200 words",
+  "key_hooks": [
+    "Direct alignment with Apple's on-device ML initiatives through CoreML expertise.",
+    "Proven proficiency in Swift and Objective-C, essential for iOS engineering.",
+    "Opportunity 
+2026-06-18 13:21:02 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='medium' hooks=4
+2026-06-18 13:21:02 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='medium'
+2026-06-18 13:21:02 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:21:02 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:21:02 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:21:02 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:21:18 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:21:18 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:21:18 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:21:18 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:21:22 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:21:22 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:21:23 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:21:23 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-18 13:21:23 | INFO     | cold_email.__main__                 | Generate clicked | variations=2 | lead='Apple_iOS Engineer' | template='job_inquiry_direct'
+2026-06-18 13:21:23 | INFO     | cold_email.email_writer_agent       | Compiling LangGraph email writer pipeline
+2026-06-18 13:21:23 | INFO     | cold_email.email_writer_agent       | LangGraph writer pipeline compiled successfully
+2026-06-18 13:21:23 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='Apple' template='job_inquiry_direct' variations=2
+2026-06-18 13:21:23 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='Apple' template='job_inquiry_direct' variations=2
+2026-06-18 13:21:23 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-18 13:21:33 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): ```json
+[
+  {
+    "subject": "iOS Engineer Application - CoreML Expertise at Apple",
+    "body": "I'm proactively reaching out regarding iOS Engineer opportunities at Apple. With 1.5 years of experience in iOS development, I possess strong proficiency in Swift and Objective-C. I recently integrated CoreML to enhance a client-facing application's real-time data processing capabilities, leading to a 15% reduction in latency.\n\nApple's pioneering work in integrating advanced on-device machine lear
+2026-06-18 13:21:33 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 2 email(s)
+2026-06-18 13:21:33 | INFO     | cold_email.__main__                 | Email writer returned 2 email(s)
+2026-06-18 13:21:33 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-18 13:21:33 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-18 13:21:33 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-18 13:21:33 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:27:22 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-19 16:27:32 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:27:32 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:27:33 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:27:33 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:27:45 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:27:45 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:27:45 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:27:45 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:27:57 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:27:57 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:27:57 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:27:57 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:27:57 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Apple_iOS Engineer'
+2026-06-19 16:27:57 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-19 16:27:57 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-19 16:27:57 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Apple' role='iOS Engineer'
+2026-06-19 16:27:57 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Apple' role='iOS Engineer'
+2026-06-19 16:27:57 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-19 16:28:00 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Technology",
+  "value_proposition": "Apple designs and manufactures consumer electronics, software, and online services, focusing on integrating advanced on-device machine learning.",
+  "target_audience": "enterprise",
+  "email_goal": "recruitment"
+}
+```
+2026-06-19 16:28:00 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Technology' goal='recruitment' audience='enterprise'
+2026-06-19 16:28:00 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Technology' goal='recruitment'
+2026-06-19 16:28:00 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-19 16:28:05 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "short",
+  "word_range": "<100 words",
+  "key_hooks": [
+    "Your CoreML expertise directly aligns with Apple's advanced on-device ML focus.",
+    "Opportunity to leverage Swift and Objective-C skills on innovative iOS projects.",
+    "Contribute t
+2026-06-19 16:28:05 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='short' hooks=4
+2026-06-19 16:28:05 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='short'
+2026-06-19 16:28:05 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:28:05 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:28:05 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:28:05 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:28:32 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:28:32 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:28:32 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:28:32 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:28:33 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:28:33 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:28:33 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:28:33 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database

@@ -416,22 +416,22 @@ def render_email_generation_ui(lead, key_prefix):
                         use_cases_html = ''.join(f'<li>{uc}</li>' for uc in tmpl.use_cases)
                         example_short = tmpl.example_opening[:90] + ('…' if len(tmpl.example_opening) > 90 else '')
                         with col:
-                            st.markdown(
-                                f"""<div class="{card_class}">
-    {selected_badge}
-    <span class="tc-icon">{tmpl.icon}</span>
-    <div class="tc-name">{tmpl.name}</div>
-    <div class="tc-tagline">{tmpl.tagline}</div>
-    <div class="tc-meta">
-        <span class="tc-pill tc-pill-style">{tmpl.style}</span>
-        <span class="tc-pill tc-pill-tone">{tmpl.tone}</span>
-        <span class="tc-pill tc-pill-len">{tmpl.length} · {tmpl.word_range}</span>
-    </div>
-    <ul class="tc-use-cases">{use_cases_html}</ul>
-    <div class="tc-example">"{example_short}"</div>
-</div>""",
-                                unsafe_allow_html=True,
+                            card_html = (
+                                f'<div class="{card_class}">'
+                                f'{selected_badge}'
+                                f'<span class="tc-icon">{tmpl.icon}</span>'
+                                f'<div class="tc-name">{tmpl.name}</div>'
+                                f'<div class="tc-tagline">{tmpl.tagline}</div>'
+                                f'<div class="tc-meta">'
+                                f'<span class="tc-pill tc-pill-style">{tmpl.style}</span>'
+                                f'<span class="tc-pill tc-pill-tone">{tmpl.tone}</span>'
+                                f'<span class="tc-pill tc-pill-len">{tmpl.length} · {tmpl.word_range}</span>'
+                                f'</div>'
+                                f'<ul class="tc-use-cases">{use_cases_html}</ul>'
+                                f'<div class="tc-example">"{example_short}"</div>'
+                                f'</div>'
                             )
+                            st.markdown(card_html, unsafe_allow_html=True)
                             btn_label = "✓ Selected" if is_selected else "Use This Template"
                             btn_type  = "primary" if is_selected else "secondary"
                             if st.button(btn_label, key=f"{key_prefix}_tmpl_{tmpl.id}", type=btn_type, use_container_width=True):
