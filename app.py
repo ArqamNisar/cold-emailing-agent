@@ -208,9 +208,8 @@ st.markdown("""
 
 
 # Setup navigation tabs
-tab_csv, tab_manual, tab_db = st.tabs([
+tab_csv, tab_db = st.tabs([
     "📥 Upload Leads", 
-    "📝 Add Lead", 
     "🗂️ Leads"
 ])
 
@@ -220,10 +219,8 @@ def auto_map_columns(columns):
     standard_fields = {
         'company_name': ['company name', 'company', 'name', 'firm', 'organization'],
         'email': ['email', 'email address', 'mail', 'contact', 'email_address'],
-        'target_role': ['target role', 'role', 'position', 'job title', 'title', 'target_role'],
         'company_focus': ['focus', 'company focus', 'areas of focus', 'industry', 'domain', 'focus_areas', 'company_focus'],
-        'my_skills': ['my skills', 'skills', 'skill', 'technologies', 'tech stack', 'my_skills'],
-        'experience_years': ['experience', 'years of experience', 'experience years', 'exp', 'years', 'experience_years']
+        'our_value_proposition': ['our value proposition', 'value proposition', 'pitch', 'our pitch', 'our value', 'value_proposition', 'our_value_proposition', 'synergy', 'proposition', 'offering', 'offer']
     }
     
     for field, variations in standard_fields.items():
@@ -251,45 +248,31 @@ def auto_map_columns(columns):
     return mapping
 
 
-def generate_mock_emails(company, role, skills, experience, num_variations):
+def generate_mock_emails(company, company_focus, our_value_proposition, num_variations):
     """Fallback mock generator used when the LLM writer agent fails."""
-    log.info("Generating %d MOCK emails | company='%s' role='%s'", num_variations, company, role)
+    log.info("Generating %d MOCK emails | company='%s'", num_variations, company)
     variations = [
         {
-            "subject": f"Inquiry: Connecting regarding {role} roles at {company}",
-            "body": f"Hi team,\n\nI hope you're doing well.\n\nI've been following {company}'s work and was very impressed by your progress. I noticed you are expanding your team for {role} positions.\n\nWith {experience} years of experience specialising in {skills}, I have built similar systems and would love to see if I could add value to your team. Are you open to a brief chat next week?\n\nBest regards"
+            "subject": f"Partnership Opportunity: Connecting {company} & Our Team",
+            "body": f"Hi team,\n\nI hope you're doing well.\n\nI've been following {company}'s work and was very impressed by your focus on {company_focus}. I believe there is a strong potential synergy between our organisations.\n\nSpecifically, we specialise in: {our_value_proposition}. I'd love to see if we could explore a strategic partnership or integration that benefits both of our user bases. Are you open to a brief chat next week?\n\nBest regards"
         },
         {
-            "subject": f"Interested in {role} opportunities at {company}",
-            "body": f"Hello,\n\nI am reaching out because I am very interested in the {role} position at {company}. I have spent the last {experience} years honing my skills in {skills}, and I am confident that my background aligns well with your team's current focus.\n\nI would appreciate the opportunity to connect and learn more about what you're building. Please let me know if you have 10 minutes to sync.\n\nThanks"
+            "subject": f"Proposal: Collaboration regarding {company_focus}",
+            "body": f"Hello,\n\nI am reaching out because I am very interested in exploring a collaboration opportunity with {company}.\n\nGiven our work in {our_value_proposition}, I believe we could add significant value to your offerings in {company_focus}.\n\nI would appreciate the opportunity to connect and learn more about your upcoming priorities. Please let me know if you have 10 minutes to sync.\n\nThanks"
         },
         {
-            "subject": f"Skills match for {role} at {company}",
-            "body": f"Hi there,\n\nI'm writing to express my interest in the {role} opening at {company}.\n\nGiven my experience ({experience} years) with {skills}, I am excited about the prospect of contributing to {company}'s upcoming milestones.\n\nWould you be open to a quick call to explore how my skills could support your goals?\n\nSincerely"
-        },
-        {
-            "subject": f"Let's connect — {role} at {company}",
-            "body": f"Hi,\n\nI'm a professional with {experience} years of experience and I've been looking closely at the {role} position at {company}.\n\nMy core expertise includes {skills}, which seems to be a strong fit for your current needs.\n\nDo you have a few minutes for a quick introductory call?\n\nWarmly"
-        },
-        {
-            "subject": f"Value proposition for {company}'s {role} opening",
-            "body": f"Dear Hiring Team,\n\nI am reaching out to highlight my candidacy for the {role} position at {company}. With a track record of {experience} years working with {skills}, I can jump in and contribute immediately.\n\nI'd love to share more about how my profile fits your current needs. Let me know if we can connect.\n\nBest"
+            "subject": f"Synergy between our solutions for {company}",
+            "body": f"Hi there,\n\nI'm writing to propose a potential partnership between our teams.\n\nSince your focus is on {company_focus} and we specialize in {our_value_proposition}, there seems to be a clear alignment that could drive mutual growth.\n\nWould you be open to a quick call to explore this?\n\nSincerely"
         }
     ]
     return variations[:num_variations]
 
 def render_email_generation_ui(lead, key_prefix):
     company = lead.get('Company Name', lead.get('company_name', ''))
-    role = lead.get('Target Role', lead.get('target_role', ''))
-    skills = lead.get('My Skills', lead.get('my_skills', ''))
+    company_focus = lead.get('Company Focus', lead.get('company_focus', ''))
+    our_value_proposition = lead.get('Our Value Proposition', lead.get('our_value_proposition', ''))
 
-    exp_val = lead.get('Experience (Years)', lead.get('experience_years', 0.0))
-    try:
-        exp = f"{float(exp_val):.1f}"
-    except (ValueError, TypeError):
-        exp = str(exp_val)
-
-    lead_id = f"{company}_{role}"
+    lead_id = f"{company}_{hash(company_focus)}"
     state_lead_id_key  = f"{key_prefix}_current_lead_id"
     session_key        = f"{key_prefix}_generated_emails"
     analysis_key       = f"{key_prefix}_analysis"
@@ -304,15 +287,15 @@ def render_email_generation_ui(lead, key_prefix):
     # ── Template selection state key (per tab prefix) ────────────────────
     template_key = f"{key_prefix}_selected_template"
     if template_key not in st.session_state:
-        st.session_state[template_key] = ALL_TEMPLATES[0].id   # default: Value Prop
+        st.session_state[template_key] = ALL_TEMPLATES[0].id   # default: Pain -> Solution
 
     with st.container(border=True):
         st.markdown(f"### ✉️ Create Emails for **{company}**")
-        st.write(f"Targeting the **{role}** position.")
+        st.write(f"Focusing on B2B sales/partnership outreach.")
 
         # ── Flow 1: Lead not yet analyzed ─────────────────────────────────────
         if analysis_key not in st.session_state:
-            st.write("Analyse the lead's business focus and role to determine the best cold-email outreach strategy.")
+            st.write("Analyse the lead's business focus to determine the best cold-email outreach strategy.")
             
             analyze_clicked = st.button(
                 "🔍 Run Lead Analysis",
@@ -473,7 +456,7 @@ def render_email_generation_ui(lead, key_prefix):
                     except Exception as writer_err:
                         log.warning("Email writer failed (%s) — falling back to mock", writer_err)
                         st.warning(f"⚠️ AI writer encountered an issue — showing template-based drafts instead.")
-                        emails = generate_mock_emails(company, role, skills, exp, num_variations)
+                        emails = generate_mock_emails(company, company_focus, our_value_proposition, num_variations)
 
                     st.session_state[session_key] = emails
                     st.rerun()
@@ -522,12 +505,10 @@ with tab_csv:
         except Exception as e:
             # Fallback inline data
             sample_df = pd.DataFrame({
-                "Company": ["Google", "Microsoft"],
-                "Email": ["recruiting@google.com", "hiring@microsoft.com"],
-                "Role": ["AI Developer", "Software Engineer"],
-                "Focus Areas": ["Search and AI research", "Cloud and AI systems"],
-                "Skills": ["Python, PyTorch, Jax", "C#, Python, Azure"],
-                "Years Exp": [3.5, 5.0]
+                "Company": ["Acme Corp", "CloudFlow"],
+                "Email": ["partnerships@acme.com", "sales@cloudflow.io"],
+                "Focus Areas": ["Supply chain logistics SaaS", "Cloud infrastructure monitoring"],
+                "Our Value Proposition": ["AI-powered route optimization API", "Multi-cloud automated cost optimization tools"]
             })
             st.dataframe(sample_df, hide_index=True, use_container_width=True)
             sample_bytes = sample_df.to_csv(index=False).encode('utf-8')
@@ -556,27 +537,15 @@ with tab_csv:
                 # Create mapped dataframe for consistent display
                 company_col = mapping.get('company_name', df.columns[0])
                 email_col = mapping.get('email', df.columns[0])
-                role_col = mapping.get('target_role', df.columns[0])
                 focus_col = mapping.get('company_focus', df.columns[0])
-                skills_col = mapping.get('my_skills', df.columns[0])
-                exp_col = mapping.get('experience_years', df.columns[0])
+                val_prop_col = mapping.get('our_value_proposition', df.columns[0])
                 
                 mapped_df = pd.DataFrame()
                 mapped_df['Company Name'] = df[company_col].astype(str)
                 mapped_df['Email'] = df[email_col].astype(str)
-                mapped_df['Target Role'] = df[role_col].astype(str)
                 mapped_df['Company Focus'] = df[focus_col].astype(str)
-                mapped_df['My Skills'] = df[skills_col].astype(str)
+                mapped_df['Our Value Proposition'] = df[val_prop_col].astype(str)
                 
-                def parse_exp(val):
-                    try:
-                        if pd.isna(val) or str(val).strip() == "": return 0.0
-                        nums = ''.join(c for c in str(val) if c.isdigit() or c == '.')
-                        return float(nums) if nums else 0.0
-                    except ValueError:
-                        return 0.0
-                        
-                mapped_df['Experience (Years)'] = df[exp_col].apply(parse_exp)
                 st.session_state['csv_data'] = mapped_df
                 
                 st.success(f"Successfully loaded {len(df)} rows from {uploaded_file.name}")
@@ -587,10 +556,8 @@ with tab_csv:
                     lead_data = {
                         'company_name': row['Company Name'],
                         'email': row['Email'],
-                        'target_role': row['Target Role'],
                         'company_focus': row['Company Focus'],
-                        'my_skills': row['My Skills'],
-                        'experience_years': row['Experience (Years)']
+                        'our_value_proposition': row['Our Value Proposition']
                     }
                     leads_to_save.append(lead_data)
                 
@@ -629,7 +596,7 @@ with tab_csv:
             if selected_rows:
                 # If multiple are selected, show dropdown to choose one
                 if len(selected_rows) > 1:
-                    lead_options = [f"{mapped_df.iloc[idx]['Company Name']} ({mapped_df.iloc[idx]['Target Role']})" for idx in selected_rows]
+                    lead_options = [f"{mapped_df.iloc[idx]['Company Name']} ({mapped_df.iloc[idx]['Company Focus']})" for idx in selected_rows]
                     selected_lead_idx = st.selectbox(
                         "Select a lead to generate emails for:",
                         options=range(len(selected_rows)),
@@ -643,84 +610,7 @@ with tab_csv:
                 # Render the email generation UI
                 render_email_generation_ui(chosen_lead, "csv")
 
-# --- TAB 2: MANUAL LEAD ENTRY ---
-with tab_manual:
-    st.markdown("### 📝 Enter Lead Details Manually")
-    st.write("Fill in the lead details below — it will be saved automatically and you can immediately generate cold email variations.")
-    
-    with st.form("manual_lead_form", clear_on_submit=True):
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            company_name = st.text_input("Company Name *", placeholder="e.g. Acme Corp")
-            email = st.text_input("Contact Email *", placeholder="e.g. recruitment@acme.com")
-            target_role = st.text_input("Target Role *", placeholder="e.g. Senior Software Engineer")
-        
-        with col2:
-            experience_years = st.number_input(
-                "Years of Experience *", 
-                min_value=0.0, 
-                max_value=50.0, 
-                value=0.0, 
-                step=0.5
-            )
-            company_focus = st.text_area(
-                "Company's Focus / Areas of Focus *", 
-                placeholder="e.g. Enterprise SaaS, Artificial Intelligence, Cybersecurity",
-                height=68
-            )
-            my_skills = st.text_area(
-                "My Skills (Relevant to role) *", 
-                placeholder="e.g. Python, Streamlit, Docker, Machine Learning",
-                height=68
-            )
-            
-        submitted = st.form_submit_button("➕ Add Lead")
-        
-        if submitted:
-            errors = []
-            if not company_name.strip():
-                errors.append("Company Name")
-            if not email.strip():
-                errors.append("Contact Email")
-            elif "@" not in email:
-                errors.append("Contact Email (must be a valid address)")
-            if not target_role.strip():
-                errors.append("Target Role")
-            if experience_years <= 0.0:
-                errors.append("Years of Experience (must be greater than 0)")
-            if not company_focus.strip():
-                errors.append("Company's Focus")
-            if not my_skills.strip():
-                errors.append("My Skills")
-            
-            if errors:
-                log.warning("Manual lead entry failed validation: missing/invalid %s", errors)
-                st.error("Please complete the following required fields:\n- " + "\n- ".join(errors))
-            else:
-                log.info("Manual lead entry passed validation — saving '%s'", company_name)
-                database.save_lead(
-                    company_name=company_name,
-                    email=email,
-                    target_role=target_role,
-                    company_focus=company_focus,
-                    my_skills=my_skills,
-                    experience_years=experience_years
-                )
-                st.success(f"🎉 Lead for '{company_name}' saved! Now generate emails below.")
-                # Persist this lead in session state so the email UI appears below
-                st.session_state['manual_last_lead'] = {
-                    'Company Name': company_name,
-                    'Target Role': target_role,
-                    'My Skills': my_skills,
-                    'Experience (Years)': experience_years
-                }
-    
-    # Show email generation UI for the most recently added manual lead
-    if 'manual_last_lead' in st.session_state:
-        render_email_generation_ui(st.session_state['manual_last_lead'], "manual")
-
-# --- TAB 3: LEADS DATABASE EXPLORER ---
+# --- TAB 2: LEADS DATABASE EXPLORER ---
 with tab_db:
     st.markdown("### 🗂️ Leads Database Explorer")
     st.write("Browse, search, and delete leads stored in your local SQLite database.")
@@ -729,7 +619,7 @@ with tab_db:
     leads = database.get_all_leads()
     
     if not leads:
-        st.info("The database is currently empty. Go ahead and add some leads using CSV Import or Manual Entry.")
+        st.info("The database is currently empty. Go ahead and upload some leads using CSV Import.")
     else:
         db_df = pd.DataFrame(leads)
         
@@ -737,25 +627,24 @@ with tab_db:
         db_df_display = db_df.copy()
         # Reorder columns for a nicer view
         cols_display = [
-            'id', 'company_name', 'email', 'target_role', 
-            'company_focus', 'my_skills', 'experience_years', 'created_at'
+            'id', 'company_name', 'email', 
+            'company_focus', 'our_value_proposition', 'created_at'
         ]
         db_df_display = db_df_display[cols_display]
         db_df_display.columns = [
-            'ID', 'Company Name', 'Email Address', 'Target Role', 
-            'Company Focus', 'My Skills', 'Experience (Years)', 'Created At'
+            'ID', 'Company Name', 'Email Address', 
+            'Company Focus', 'Our Value Proposition', 'Created At'
         ]
         
         # Search & Filter
-        search_query = st.text_input("🔍 Search Leads", placeholder="Search by Company, Email, Role, Focus, or Skills...")
+        search_query = st.text_input("🔍 Search Leads", placeholder="Search by Company, Email, Focus, or Value Prop...")
         if search_query.strip():
             q = search_query.lower().strip()
             db_df_display = db_df_display[
                 db_df_display['Company Name'].str.lower().str.contains(q) |
                 db_df_display['Email Address'].str.lower().str.contains(q) |
-                db_df_display['Target Role'].str.lower().str.contains(q) |
                 db_df_display['Company Focus'].str.lower().str.contains(q) |
-                db_df_display['My Skills'].str.lower().str.contains(q)
+                db_df_display['Our Value Proposition'].str.lower().str.contains(q)
             ]
             
         st.markdown(f'<div class="badge">{len(db_df_display)} lead(s) found</div>', unsafe_allow_html=True)
@@ -788,7 +677,7 @@ with tab_db:
                 
                 # If multiple are selected, show dropdown to choose one
                 if len(selected_db_rows) > 1:
-                    lead_options = [f"{db_df_display.iloc[idx]['Company Name']} ({db_df_display.iloc[idx]['Target Role']})" for idx in selected_db_rows]
+                    lead_options = [f"{db_df_display.iloc[idx]['Company Name']} ({db_df_display.iloc[idx]['Company Focus']})" for idx in selected_db_rows]
                     selected_lead_idx = st.selectbox(
                         "Select a lead to generate emails for:",
                         options=range(len(selected_db_rows)),

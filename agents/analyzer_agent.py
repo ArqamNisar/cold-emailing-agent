@@ -33,16 +33,14 @@ log = get_logger(__name__)
 class LeadAnalysisState(TypedDict):
     # ── Inputs ──────────────────────────────────────────────────────────────
     company_name: str
-    target_role: str
     company_focus: str
-    my_skills: str
-    experience_years: float
+    our_value_proposition: str
 
     # ── Phase 1: Input Analysis (populated by input_analyzer) ──────────────
     company_industry: str               # e.g. "Artificial Intelligence"
     value_proposition: str             # one-sentence company pitch
     target_audience: str               # "startup" | "mid-size" | "enterprise"
-    email_goal: str                    # "sales" | "recruitment" | "partnership"
+    email_goal: str                    # "sales" | "partnership"
 
     # ── Phase 2: Strategy (populated by strategy_planner) ──────────────────
     tone: str                          # "formal" | "casual" | "persuasive" | "urgent"
@@ -102,8 +100,7 @@ def input_analyzer_node(state: LeadAnalysisState) -> dict:
     """
     Analyse the raw lead data and return structured company / audience insight.
     """
-    log.info("[input_analyzer] START | company='%s' role='%s'",
-             state['company_name'], state['target_role'])
+    log.info("[input_analyzer] START | company='%s'", state['company_name'])
 
     system_prompt = (
         "You are a business intelligence analyst specialising in B2B outreach. "
@@ -116,14 +113,12 @@ def input_analyzer_node(state: LeadAnalysisState) -> dict:
 - company_industry   : The primary industry of the company (string, ≤4 words)
 - value_proposition  : One-sentence description of what the company does / its main value (string)
 - target_audience    : Company size category — one of "startup", "mid-size", "enterprise" (string)
-- email_goal         : Most appropriate email goal — one of "sales", "recruitment", "partnership" (string)
+- email_goal         : Most appropriate email goal — one of "sales", "partnership" (string)
 
 Lead data:
-  Company Name  : {state["company_name"]}
-  Target Role   : {state["target_role"]}
-  Company Focus : {state["company_focus"]}
-  My Skills     : {state["my_skills"]}
-  Experience    : {state["experience_years"]} years
+  Company Name           : {state["company_name"]}
+  Company Focus          : {state["company_focus"]}
+  Our Value Proposition  : {state["our_value_proposition"]}
 
 Return ONLY the JSON object, nothing else."""
 
@@ -142,7 +137,7 @@ Return ONLY the JSON object, nothing else."""
             "company_industry": parsed.get("company_industry", "Technology"),
             "value_proposition": parsed.get("value_proposition", ""),
             "target_audience": parsed.get("target_audience", "mid-size"),
-            "email_goal": parsed.get("email_goal", "recruitment"),
+            "email_goal": parsed.get("email_goal", "sales"),
             "error": None,
         }
     except Exception as exc:
@@ -152,7 +147,7 @@ Return ONLY the JSON object, nothing else."""
             "company_industry": "Technology",
             "value_proposition": f"{state['company_name']} operates in {state['company_focus']}.",
             "target_audience": "mid-size",
-            "email_goal": "recruitment",
+            "email_goal": "sales",
             "error": str(exc),
         }
 
@@ -183,18 +178,16 @@ def strategy_planner_node(state: LeadAnalysisState) -> dict:
   - long   = more than 200 words
 - word_range  : Human-readable range, e.g. "<100 words" or "100–200 words" or ">200 words" (string)
 - key_hooks   : A list of 3–5 short bullet-point strings — the most important angles to emphasise
-                in the email given the candidate's skills and the company's focus
+                in the email given our value proposition and the company's focus/industry
 
 Analysis:
-  Company         : {state["company_name"]}
-  Industry        : {state.get("company_industry", "")}
-  Value Prop      : {state.get("value_proposition", "")}
-  Audience Size   : {state.get("target_audience", "")}
-  Email Goal      : {state.get("email_goal", "")}
-  Target Role     : {state["target_role"]}
-  Company Focus   : {state["company_focus"]}
-  Candidate Skills: {state["my_skills"]}
-  Experience      : {state["experience_years"]} years
+  Company              : {state["company_name"]}
+  Industry             : {state.get("company_industry", "")}
+  Value Prop           : {state.get("value_proposition", "")}
+  Audience Size        : {state.get("target_audience", "")}
+  Email Goal           : {state.get("email_goal", "")}
+  Company Focus        : {state["company_focus"]}
+  Our Value Proposition: {state["our_value_proposition"]}
 
 Return ONLY the JSON object, nothing else."""
 
@@ -229,9 +222,8 @@ Return ONLY the JSON object, nothing else."""
             "email_length": "medium",
             "word_range": "100–200 words",
             "key_hooks": [
-                f"Strong expertise in {state['my_skills']}",
-                f"Direct alignment with {state['company_focus']}",
-                f"{state['experience_years']} years of relevant experience",
+                f"Strong alignment with {state['company_focus']}",
+                f"Offering direct value proposition: {state['our_value_proposition']}",
             ],
             "error": str(exc),
         }
@@ -292,10 +284,8 @@ def run_analyzer(lead: dict) -> LeadAnalysisState:
 
     initial_state: LeadAnalysisState = {
         "company_name": str(_get(lead, "Company Name", "company_name")),
-        "target_role": str(_get(lead, "Target Role", "target_role")),
         "company_focus": str(_get(lead, "Company Focus", "company_focus")),
-        "my_skills": str(_get(lead, "My Skills", "my_skills")),
-        "experience_years": float(_get(lead, "Experience (Years)", "experience_years") or 0),
+        "our_value_proposition": str(_get(lead, "Our Value Proposition", "our_value_proposition")),
         # Phase 1 — will be populated by input_analyzer
         "company_industry": "",
         "value_proposition": "",
@@ -309,8 +299,7 @@ def run_analyzer(lead: dict) -> LeadAnalysisState:
         "error": None,
     }
 
-    log.info("Invoking analyzer graph | company='%s' role='%s'",
-             initial_state["company_name"], initial_state["target_role"])
+    log.info("Invoking analyzer graph | company='%s'", initial_state["company_name"])
 
     result = _graph.invoke(initial_state)
 

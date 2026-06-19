@@ -1,6 +1,6 @@
-Company,Email,Role,Focus Areas,Skills,Years Exp
-Google,recruiting@google.com,AI Developer,Search and AI research,"Python, PyTorch, Jax",3.5
-Microsoft,hiring@microsoft.com,Software Engineer,Cloud and AI systems,"C#, Python, Azure",5
-Meta,jobs@meta.com,Research Scientist,Large Language Models,"PyTorch, NLP, Distributed Systems",2
-Netflix,talent@netflix.com,Backend Engineer,Streaming infrastructure,"Java, AWS, SQL",4.5
-Apple,careers@apple.com,iOS Engineer,On-device ML,"Swift, CoreML, Objective-C",1.5
+Company,Email,Focus Areas,Our Value Proposition
+Acme Corp,partnerships@acme.com,Supply chain logistics SaaS,AI-powered route optimization API
+CloudFlow,sales@cloudflow.io,Cloud infrastructure monitoring,Multi-cloud automated cost optimization tools
+Apex Design,hello@apexdesign.com,Digital marketing agency,High-converting landing page UI/UX design services
+Solaris Power,info@solarispower.com,Renewable energy grid analytics,IoT predictive maintenance software integration
+FinTech Solutions,partners@fintechsolutions.com,Enterprise banking fraud detection,Real-time anomaly detection engine using graph databases

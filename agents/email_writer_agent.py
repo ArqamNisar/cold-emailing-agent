@@ -37,10 +37,8 @@ log = get_logger(__name__)
 class EmailWriterState(TypedDict):
     # ── Inputs ──────────────────────────────────────────────────────────────
     company_name: str
-    target_role: str
     company_focus: str
-    my_skills: str
-    experience_years: float
+    our_value_proposition: str
     email: str                     # recipient email (for personalisation hints)
 
     # ── From analyzer ───────────────────────────────────────────────────────
@@ -154,10 +152,10 @@ def email_writer_node(state: EmailWriterState) -> dict:
         "--- Global Writing Constraints ---\n"
         f"  • Tone       : {eff_tone}\n"
         f"  • Length     : {eff_length} ({eff_word_range})\n"
-        "  • Elaborate and develop details fully so that the length matches the target range. Do not write single-sentence placeholder paragraphs; ensure every hook and credential is fully written out and natural.\n"
+        "  • Elaborate and develop details fully so that the length matches the target range. Do not write single-sentence placeholder paragraphs; ensure every hook and partnership value is fully written out and natural.\n"
         "  • Every variation MUST have a UNIQUE subject line and a noticeably different opening sentence.\n"
         "  • Personalise deeply: weave in the company's name, industry, focus, and value proposition.\n"
-        "  • The sender is the CANDIDATE writing in first-person.\n"
+        "  • The sender is a representative of the company pitching partnerships or closing deals (writing on behalf of their team/firm).\n"
         "  • Do NOT include placeholder text like [Your Name] or [Link] — write naturally.\n"
         "  • Do NOT include any prose outside the JSON array in your response.\n\n"
         "Return ONLY a valid JSON array with this exact schema:\n"
@@ -166,17 +164,15 @@ def email_writer_node(state: EmailWriterState) -> dict:
 
     human_prompt = (
         f"Generate {n} cold-email variation(s) following the template structure above.\n\n"
-        "--- Candidate Profile ---\n"
-        f"  Skills      : {state['my_skills']}\n"
-        f"  Experience  : {state['experience_years']} years\n\n"
+        "--- Our Value Proposition ---\n"
+        f"  Offer/Services: {state['our_value_proposition']}\n\n"
         "--- Target Company ---\n"
         f"  Company     : {state['company_name']}\n"
         f"  Industry    : {state.get('company_industry', '')}\n"
         f"  Value Prop  : {state.get('value_proposition', '')}\n"
         f"  Focus       : {state['company_focus']}\n"
         f"  Audience    : {state.get('target_audience', '')}\n"
-        f"  Email Goal  : {state.get('email_goal', '')}\n"
-        f"  Target Role : {state['target_role']}\n\n"
+        f"  Email Goal  : {state.get('email_goal', '')}\n\n"
         f"--- Key Hooks to Weave In (from lead analysis) ---\n"
         f"{hooks_text}\n\n"
         f"Return exactly {n} email object(s) in the JSON array. Nothing else."
@@ -255,10 +251,8 @@ def run_email_writer(
     initial_state: EmailWriterState = {
         # Lead fields
         "company_name": str(_get(lead, "Company Name", "company_name")),
-        "target_role":  str(_get(lead, "Target Role",  "target_role")),
         "company_focus":str(_get(lead, "Company Focus","company_focus")),
-        "my_skills":    str(_get(lead, "My Skills",    "my_skills")),
-        "experience_years": float(_get(lead, "Experience (Years)", "experience_years") or 0),
+        "our_value_proposition": str(_get(lead, "Our Value Proposition", "our_value_proposition")),
         "email":        str(_get(lead, "Email", "email", "Email Address") or ""),
 
         # Analysis fields (from analyzer agent)

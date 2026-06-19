@@ -12,15 +12,22 @@ def init_db():
     log.info("Initialising database at '%s'", DB_NAME)
     conn = get_connection()
     cursor = conn.cursor()
+    
+    # Check if table exists and has the old schema (containing my_skills column)
+    cursor.execute("PRAGMA table_info(leads)")
+    columns = [row[1] for row in cursor.fetchall()]
+    if columns and "my_skills" in columns:
+        log.info("Old schema detected in 'leads' table. Dropping table for recreation.")
+        cursor.execute("DROP TABLE leads")
+        conn.commit()
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS leads (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             company_name TEXT NOT NULL,
             email TEXT NOT NULL,
-            target_role TEXT NOT NULL,
             company_focus TEXT,
-            my_skills TEXT,
-            experience_years REAL,
+            our_value_proposition TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -28,29 +35,21 @@ def init_db():
     conn.close()
     log.debug("Database initialised successfully")
 
-def save_lead(company_name, email, target_role, company_focus, my_skills, experience_years):
+def save_lead(company_name, email, company_focus, our_value_proposition):
     """Saves a single lead to the database."""
-    log.info("Saving single lead | company='%s' role='%s' email='%s'",
-             company_name, target_role, email)
+    log.info("Saving single lead | company='%s' email='%s'",
+             company_name, email)
     conn = get_connection()
     cursor = conn.cursor()
-    # Ensure experience_years is a float or None
-    try:
-        exp = float(experience_years) if experience_years is not None and str(experience_years).strip() != "" else 0.0
-    except ValueError:
-        log.warning("Could not parse experience_years='%s' — defaulting to 0.0", experience_years)
-        exp = 0.0
 
     cursor.execute("""
-        INSERT INTO leads (company_name, email, target_role, company_focus, my_skills, experience_years)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO leads (company_name, email, company_focus, our_value_proposition)
+        VALUES (?, ?, ?, ?)
     """, (
         str(company_name).strip(),
         str(email).strip(),
-        str(target_role).strip(),
         str(company_focus).strip() if company_focus else "",
-        str(my_skills).strip() if my_skills else "",
-        exp
+        str(our_value_proposition).strip() if our_value_proposition else ""
     ))
     conn.commit()
     conn.close()
@@ -66,25 +65,16 @@ def save_leads_batch(leads_list):
 
     parsed_leads = []
     for lead in leads_list:
-        try:
-            exp_val = lead.get('experience_years', 0.0)
-            exp = float(exp_val) if exp_val is not None and str(exp_val).strip() != "" else 0.0
-        except ValueError:
-            log.warning("Batch lead has unparseable experience_years='%s'", lead.get('experience_years'))
-            exp = 0.0
-
         parsed_leads.append((
             str(lead.get('company_name', '')).strip(),
             str(lead.get('email', '')).strip(),
-            str(lead.get('target_role', '')).strip(),
             str(lead.get('company_focus', '')).strip(),
-            str(lead.get('my_skills', '')).strip(),
-            exp
+            str(lead.get('our_value_proposition', '')).strip()
         ))
 
     cursor.executemany("""
-        INSERT INTO leads (company_name, email, target_role, company_focus, my_skills, experience_years)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO leads (company_name, email, company_focus, our_value_proposition)
+        VALUES (?, ?, ?, ?)
     """, parsed_leads)
 
     conn.commit()
