@@ -56,15 +56,15 @@ st.markdown("""
         font-weight: 400;
     }
     
-    /* Card design system */
-    .card-container {
-        background: rgba(30, 41, 59, 0.45);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 16px;
-        padding: 2rem;
-        backdrop-filter: blur(12px);
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    /* Card design system using Streamlit's native bordered container */
+    div[data-testid="stVerticalBlockBorderDiv"] {
+        background: rgba(30, 41, 59, 0.45) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 16px !important;
+        padding: 2rem !important;
+        backdrop-filter: blur(12px) !important;
+        margin-bottom: 1.5rem !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2) !important;
     }
     
     /* Form inputs and buttons styling rules */
@@ -306,193 +306,205 @@ def render_email_generation_ui(lead, key_prefix):
     if template_key not in st.session_state:
         st.session_state[template_key] = ALL_TEMPLATES[0].id   # default: Value Prop
 
-    st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown(f"### ✉️ Create Emails for **{company}**")
-    st.write(f"Targeting the **{role}** position.")
+    with st.container(border=True):
+        st.markdown(f"### ✉️ Create Emails for **{company}**")
+        st.write(f"Targeting the **{role}** position.")
 
-    # ── Flow 1: Lead not yet analyzed ─────────────────────────────────────
-    if analysis_key not in st.session_state:
-        st.write("Analyse the lead's business focus and role to determine the best cold-email outreach strategy.")
-        
-        analyze_clicked = st.button(
-            "🔍 Run Lead Analysis",
-            type="primary",
-            key=f"{key_prefix}_analyze_btn"
-        )
-        
-        if analyze_clicked:
-            log.info("Run Lead Analysis clicked | lead='%s'", lead_id)
-            with st.spinner("🔍 Running lead analyzer (LangGraph)…"):
-                analysis = run_analyzer(lead)
-                st.session_state[analysis_key] = analysis
-                # Clear previous generated emails if any
-                if session_key in st.session_state:
-                    del st.session_state[session_key]
-                st.rerun()
-
-    # ── Flow 2: Lead has been analyzed ────────────────────────────────────
-    else:
-        analysis = st.session_state[analysis_key]
-        if analysis.get("error") and not analysis.get("company_industry"):
-            st.warning(f"⚠️ Analyzer ran in fallback mode: {analysis['error']}")
-
-        with st.expander("🔬 Lead Analysis Report", expanded=True):
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.markdown("**📊 Input Analysis**")
-                st.markdown(f"- **Industry:** {analysis.get('company_industry', '—')}")
-                st.markdown(f"- **Value Proposition:** {analysis.get('value_proposition', '—')}")
-                st.markdown(f"- **Audience Size:** {analysis.get('target_audience', '—').capitalize()}")
-                st.markdown(f"- **Email Goal:** {analysis.get('email_goal', '—').capitalize()}")
-            with col_b:
-                st.markdown("**🎯 Email Strategy**")
-                st.markdown(f"- **Tone:** {analysis.get('tone', '—').capitalize()}")
-                st.markdown(f"- **Length:** {analysis.get('email_length', '—').capitalize()} ({analysis.get('word_range', '')})")
-                hooks = analysis.get('key_hooks', [])
-                if hooks:
-                    st.markdown("- **Key Hooks:**")
-                    for h in hooks:
-                        st.markdown(f"  - {h}")
-
-        st.markdown("---")
-        
-        # Action controls: Re-analyse (left) vs Generate (right)
-        col_ctrl1, col_ctrl2 = st.columns([1, 2])
-        
-        with col_ctrl1:
-            st.markdown("#### 🔄 Adjust Strategy")
-            st.write("Not satisfied with the analysis? Run the agent again.")
-            reanalyze_clicked = st.button(
-                "🔄 Re-analyse Lead",
-                type="secondary",
-                key=f"{key_prefix}_reanalyze_btn"
+        # ── Flow 1: Lead not yet analyzed ─────────────────────────────────────
+        if analysis_key not in st.session_state:
+            st.write("Analyse the lead's business focus and role to determine the best cold-email outreach strategy.")
+            
+            analyze_clicked = st.button(
+                "🔍 Run Lead Analysis",
+                type="primary",
+                key=f"{key_prefix}_analyze_btn"
             )
-            if reanalyze_clicked:
-                log.info("Re-analyse Lead clicked | lead='%s'", lead_id)
-                with st.spinner("🔄 Re-running lead analyzer (LangGraph)…"):
+            
+            if analyze_clicked:
+                log.info("Run Lead Analysis clicked | lead='%s'", lead_id)
+                with st.spinner("🔍 Running lead analyzer..."):
                     analysis = run_analyzer(lead)
                     st.session_state[analysis_key] = analysis
-                    # Clear previous generated emails
+                    # Clear previous generated emails if any
                     if session_key in st.session_state:
                         del st.session_state[session_key]
                     st.rerun()
 
-        with col_ctrl2:
-            st.markdown("#### 🚀 Cold Emails")
-            st.write("Ready to draft? Choose the number of email variations to generate.")
-            
-            num_variations = st.radio(
-                "Number of email variations to generate:",
-                options=[1, 2, 3, 4, 5],
-                index=2,
-                horizontal=True,
-                key=f"{key_prefix}_num_vars"
-            )
+        # ── Flow 2: Lead has been analyzed ────────────────────────────────────
+        else:
+            analysis = st.session_state[analysis_key]
+            if analysis.get("error") and not analysis.get("company_industry"):
+                st.warning(f"⚠️ Analyzer ran in fallback mode: {analysis['error']}")
 
-        # ── Template Library ─────────────────────────────────────────────
-        st.markdown("---")
-        st.markdown('<p class="template-section-header">📚 Template Library — Choose Your Email Approach</p>', unsafe_allow_html=True)
-        st.markdown('<p class="template-section-sub">Browse templates by category. Each template defines the structure, tone, and style the AI writer will follow when generating your emails.</p>', unsafe_allow_html=True)
+            with st.expander("🔬 Lead Analysis Report", expanded=True):
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    st.markdown("**📊 Input Analysis**")
+                    st.markdown(f"- **Industry:** {analysis.get('company_industry', '—')}")
+                    st.markdown(f"- **Value Proposition:** {analysis.get('value_proposition', '—')}")
+                    st.markdown(f"- **Audience Size:** {analysis.get('target_audience', '—').capitalize()}")
+                    st.markdown(f"- **Email Goal:** {analysis.get('email_goal', '—').capitalize()}")
+                with col_b:
+                    st.markdown("**🎯 Email Strategy**")
+                    st.markdown(f"- **Tone:** {analysis.get('tone', '—').capitalize()}")
+                    st.markdown(f"- **Length:** {analysis.get('email_length', '—').capitalize()} ({analysis.get('word_range', '')})")
+                    hooks = analysis.get('key_hooks', [])
+                    if hooks:
+                        st.markdown("- **Key Hooks:**")
+                        for h in hooks:
+                            st.markdown(f"  - {h}")
 
-        current_template_id = st.session_state.get(template_key, ALL_TEMPLATES[0].id)
-
-        # Category tabs — one tab per category
-        cat_tab_labels = [
-            f"{CATEGORY_ICONS[cat]} {cat}" for cat in CATEGORIES
-        ]
-        cat_tabs = st.tabs(cat_tab_labels)
-
-        for cat_tab, category in zip(cat_tabs, CATEGORIES):
-            with cat_tab:
-                cat_templates = get_templates_by_category(category)
-                # 2 cards per row
-                for row_start in range(0, len(cat_templates), 2):
-                    row_tmpls = cat_templates[row_start : row_start + 2]
-                    cols = st.columns(len(row_tmpls))
-                    for col, tmpl in zip(cols, row_tmpls):
-                        is_selected = (tmpl.id == current_template_id)
-                        selected_badge = '<span class="tc-selected-badge">✓ Selected</span>' if is_selected else ''
-                        card_class = 'template-card selected' if is_selected else 'template-card'
-                        use_cases_html = ''.join(f'<li>{uc}</li>' for uc in tmpl.use_cases)
-                        example_short = tmpl.example_opening[:90] + ('…' if len(tmpl.example_opening) > 90 else '')
-                        with col:
-                            card_html = (
-                                f'<div class="{card_class}">'
-                                f'{selected_badge}'
-                                f'<span class="tc-icon">{tmpl.icon}</span>'
-                                f'<div class="tc-name">{tmpl.name}</div>'
-                                f'<div class="tc-tagline">{tmpl.tagline}</div>'
-                                f'<div class="tc-meta">'
-                                f'<span class="tc-pill tc-pill-style">{tmpl.style}</span>'
-                                f'<span class="tc-pill tc-pill-tone">{tmpl.tone}</span>'
-                                f'<span class="tc-pill tc-pill-len">{tmpl.length} · {tmpl.word_range}</span>'
-                                f'</div>'
-                                f'<ul class="tc-use-cases">{use_cases_html}</ul>'
-                                f'<div class="tc-example">"{example_short}"</div>'
-                                f'</div>'
-                            )
-                            st.markdown(card_html, unsafe_allow_html=True)
-                            btn_label = "✓ Selected" if is_selected else "Use This Template"
-                            btn_type  = "primary" if is_selected else "secondary"
-                            if st.button(btn_label, key=f"{key_prefix}_tmpl_{tmpl.id}", type=btn_type, use_container_width=True):
-                                st.session_state[template_key] = tmpl.id
-                                if session_key in st.session_state:
-                                    del st.session_state[session_key]
-                                st.rerun()
-
-        # Confirmation strip showing active template details
-        active_tmpl = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
-        st.markdown(
-            f'<div class="badge">{active_tmpl.icon} {active_tmpl.name} &nbsp;·&nbsp; {active_tmpl.tone.capitalize()} &nbsp;·&nbsp; {active_tmpl.word_range}</div>',
-            unsafe_allow_html=True,
-        )
-
-        # ── Generate button (placed after template selection) ──────────────
-        st.markdown("")
-        generate_clicked = st.button(
-            "🚀 Generate Email Variations",
-            type="primary",
-            key=f"{key_prefix}_generate_btn"
-        )
-
-        if generate_clicked:
-            chosen_template = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
-            log.info(
-                "Generate clicked | variations=%d | lead='%s' | template='%s'",
-                num_variations, lead_id, chosen_template.id,
-            )
-            with st.spinner(f"✍️ Writing emails using *{chosen_template.name}* approach…"):
-                try:
-                    emails = run_email_writer(
-                        lead=lead,
-                        analysis=st.session_state[analysis_key],
-                        template=chosen_template,
-                        num_variations=num_variations,
-                    )
-                    log.info("Email writer returned %d email(s)", len(emails))
-                except Exception as writer_err:
-                    log.warning("Email writer failed (%s) — falling back to mock", writer_err)
-                    st.warning(f"⚠️ AI writer encountered an issue — showing template-based drafts instead.")
-                    emails = generate_mock_emails(company, role, skills, exp, num_variations)
-
-                st.session_state[session_key] = emails
-                st.rerun()
-
-    # ── Show generated emails (if available) ──────────────────────────────
-    if session_key in st.session_state:
-        emails = st.session_state[session_key]
-        if emails:
             st.markdown("---")
-            active_tmpl_display = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
-            st.markdown(f"#### 📄 Generated Email Variations &nbsp; <span style='font-size:0.8rem;color:#6366f1;font-weight:600;'>{active_tmpl_display.icon} {active_tmpl_display.name}</span>", unsafe_allow_html=True)
-            tabs = st.tabs([f"Variation {i+1}" for i in range(len(emails))])
-            for i, tab in enumerate(tabs):
-                with tab:
-                    email_data = emails[i]
-                    st.markdown(f"**Subject:** {email_data['subject']}")
-                    st.code(email_data['body'], language="text")
+            
+            # Action controls: Re-analyse (left) vs Generate (right)
+            col_ctrl1, col_ctrl2 = st.columns([1, 2])
+            
+            with col_ctrl1:
+                st.markdown("#### 🔄 Adjust Strategy")
+                st.write("Not satisfied with the analysis? Run the agent again.")
+                reanalyze_clicked = st.button(
+                    "🔄 Re-analyse Lead",
+                    type="secondary",
+                    key=f"{key_prefix}_reanalyze_btn"
+                )
+                if reanalyze_clicked:
+                    log.info("Re-analyse Lead clicked | lead='%s'", lead_id)
+                    with st.spinner("🔄 Re-running lead analyzer…"):
+                        analysis = run_analyzer(lead)
+                        st.session_state[analysis_key] = analysis
+                        # Clear previous generated emails
+                        if session_key in st.session_state:
+                            del st.session_state[session_key]
+                        st.rerun()
 
-    st.markdown('</div>', unsafe_allow_html=True)
+            with col_ctrl2:
+                st.markdown("#### 🚀 Cold Emails")
+                st.write("Ready to draft? Choose the number of email variations to generate.")
+                
+                num_variations = st.radio(
+                    "Number of email variations to generate:",
+                    options=[1, 2, 3, 4, 5],
+                    index=2,
+                    horizontal=True,
+                    key=f"{key_prefix}_num_vars"
+                )
+
+            # ── Template Library ─────────────────────────────────────────────
+            st.markdown("---")
+            st.markdown('<p class="template-section-header">📚 Template Library — Choose Your Email Approach</p>', unsafe_allow_html=True)
+            st.markdown('<p class="template-section-sub">Browse templates by category. Each template defines the structure, tone, and style the AI writer will follow when generating your emails.</p>', unsafe_allow_html=True)
+
+            current_template_id = st.session_state.get(template_key, ALL_TEMPLATES[0].id)
+
+            # Category tabs — one tab per category
+            cat_tab_labels = [
+                f"{CATEGORY_ICONS[cat]} {cat}" for cat in CATEGORIES
+            ]
+            cat_tabs = st.tabs(cat_tab_labels)
+
+            for cat_tab, category in zip(cat_tabs, CATEGORIES):
+                with cat_tab:
+                    cat_templates = get_templates_by_category(category)
+                    # 2 cards per row
+                    for row_start in range(0, len(cat_templates), 2):
+                        row_tmpls = cat_templates[row_start : row_start + 2]
+                        cols = st.columns(len(row_tmpls))
+                        for col, tmpl in zip(cols, row_tmpls):
+                            is_selected = (tmpl.id == current_template_id)
+                            selected_badge = '<span class="tc-selected-badge">✓ Selected</span>' if is_selected else ''
+                            card_class = 'template-card selected' if is_selected else 'template-card'
+                            use_cases_html = ''.join(f'<li>{uc}</li>' for uc in tmpl.use_cases)
+                            example_short = tmpl.example_opening[:90] + ('…' if len(tmpl.example_opening) > 90 else '')
+                            with col:
+                                card_html = (
+                                    f'<div class="{card_class}">'
+                                    f'{selected_badge}'
+                                    f'<span class="tc-icon">{tmpl.icon}</span>'
+                                    f'<div class="tc-name">{tmpl.name}</div>'
+                                    f'<div class="tc-tagline">{tmpl.tagline}</div>'
+                                    f'<div class="tc-meta">'
+                                    f'<span class="tc-pill tc-pill-style">{tmpl.style}</span>'
+                                    f'<span class="tc-pill tc-pill-tone">{tmpl.tone}</span>'
+                                    f'<span class="tc-pill tc-pill-len">{tmpl.length} · {tmpl.word_range}</span>'
+                                    f'</div>'
+                                    f'<ul class="tc-use-cases">{use_cases_html}</ul>'
+                                    f'<div class="tc-example">"{example_short}"</div>'
+                                    f'</div>'
+                                )
+                                st.markdown(card_html, unsafe_allow_html=True)
+                                btn_label = "✓ Selected" if is_selected else "Use This Template"
+                                btn_type  = "primary" if is_selected else "secondary"
+                                if st.button(btn_label, key=f"{key_prefix}_tmpl_{tmpl.id}", type=btn_type, use_container_width=True):
+                                    st.session_state[template_key] = tmpl.id
+                                    if session_key in st.session_state:
+                                        del st.session_state[session_key]
+                                    st.rerun()
+
+            # Confirmation strip showing active template details
+            active_tmpl = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
+            st.markdown(
+                f'<div class="badge">{active_tmpl.icon} {active_tmpl.name} &nbsp;·&nbsp; {active_tmpl.tone.capitalize()} &nbsp;·&nbsp; {active_tmpl.word_range}</div>',
+                unsafe_allow_html=True,
+            )
+
+            # ── Generate button (placed after template selection) ──────────────
+            st.markdown("")
+            generate_clicked = st.button(
+                "🚀 Generate Email Variations",
+                type="primary",
+                key=f"{key_prefix}_generate_btn"
+            )
+
+            if generate_clicked:
+                chosen_template = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
+                log.info(
+                    "Generate clicked | variations=%d | lead='%s' | template='%s'",
+                    num_variations, lead_id, chosen_template.id,
+                )
+                with st.spinner(f"✍️ Writing emails using *{chosen_template.name}* approach…"):
+                    try:
+                        emails = run_email_writer(
+                            lead=lead,
+                            analysis=st.session_state[analysis_key],
+                            template=chosen_template,
+                            num_variations=num_variations,
+                        )
+                        log.info("Email writer returned %d email(s)", len(emails))
+                    except Exception as writer_err:
+                        log.warning("Email writer failed (%s) — falling back to mock", writer_err)
+                        st.warning(f"⚠️ AI writer encountered an issue — showing template-based drafts instead.")
+                        emails = generate_mock_emails(company, role, skills, exp, num_variations)
+
+                    st.session_state[session_key] = emails
+                    st.rerun()
+
+        # ── Show generated emails (if available) ──────────────────────────────
+        if session_key in st.session_state:
+            emails = st.session_state[session_key]
+            if emails:
+                st.markdown("---")
+                active_tmpl_display = get_template(st.session_state.get(template_key, ALL_TEMPLATES[0].id))
+                st.markdown(f"#### 📄 Generated Email Variations &nbsp; <span style='font-size:0.8rem;color:#6366f1;font-weight:600;'>{active_tmpl_display.icon} {active_tmpl_display.name}</span>", unsafe_allow_html=True)
+                tabs = st.tabs([f"Variation {i+1}" for i in range(len(emails))])
+                for i, tab in enumerate(tabs):
+                    with tab:
+                        email_data = emails[i]
+                        st.markdown(f"**Subject:** {email_data['subject']}")
+                        email_html = (
+                            f'<div style="'
+                            f'background: rgba(30, 41, 59, 0.45);'
+                            f'border: 1px solid rgba(255, 255, 255, 0.07);'
+                            f'border-radius: 8px;'
+                            f'padding: 1.2rem;'
+                            f'color: #e2e8f0;'
+                            f'font-family: \'Inter\', sans-serif;'
+                            f'white-space: pre-wrap;'
+                            f'line-height: 1.6;'
+                            f'font-size: 0.92rem;'
+                            f'margin-top: 0.5rem;'
+                            f'">{email_data["body"]}</div>'
+                        )
+                        st.markdown(email_html, unsafe_allow_html=True)
 
 # --- TAB 1: CSV IMPORT & PARSE ---
 with tab_csv:
@@ -764,6 +776,16 @@ with tab_db:
             selected_db_rows = db_event.selection.rows
             
             if selected_db_rows:
+                # ── Delete options right below the table ────────────────────
+                selected_ids = [int(db_df.iloc[idx]['id']) for idx in selected_db_rows]
+                st.markdown("---")
+                col_del, _ = st.columns([1, 3])
+                with col_del:
+                    if st.button("🗑️ Delete Selected Leads", key="btn_delete_db", use_container_width=True):
+                        database.delete_leads(selected_ids)
+                        st.success("Selected leads deleted successfully!")
+                        st.rerun()
+                
                 # If multiple are selected, show dropdown to choose one
                 if len(selected_db_rows) > 1:
                     lead_options = [f"{db_df_display.iloc[idx]['Company Name']} ({db_df_display.iloc[idx]['Target Role']})" for idx in selected_db_rows]
@@ -779,10 +801,5 @@ with tab_db:
                 
                 # Render the email generation UI
                 render_email_generation_ui(chosen_lead, "db")
-                
-                # Delete options
-                st.markdown("---")
-                if st.button("🗑️ Delete Selected Leads", key="btn_delete_db"):
-                    database.delete_leads(selected_ids)
-                    st.success("Selected leads deleted successfully!")
-                    st.rerun()
+            
+

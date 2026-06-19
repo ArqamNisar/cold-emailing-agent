@@ -1367,3 +1367,89 @@ langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling mo
 2026-06-19 16:50:07 | DEBUG    | cold_email.database                 | Database initialised successfully
 2026-06-19 16:50:07 | DEBUG    | cold_email.database                 | Fetching all leads from database
 2026-06-19 16:50:07 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:53:47 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:53:47 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:53:47 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:53:47 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:53:52 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:53:52 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:53:52 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:53:52 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 16:53:56 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 16:53:56 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 16:53:56 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 16:53:56 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 17:02:27 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:02:27 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:02:27 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:02:27 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 17:02:34 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:02:34 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:02:34 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:02:34 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 17:02:37 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:02:37 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:02:37 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:02:37 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 17:02:40 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:02:40 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:02:40 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:02:40 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 17:02:41 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:02:41 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:02:41 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:02:41 | INFO     | cold_email.database                 | Fetched 6 lead(s) from database
+2026-06-19 17:02:41 | INFO     | cold_email.database                 | Deleting 1 lead(s) with IDs: [10]
+2026-06-19 17:02:41 | INFO     | cold_email.database                 | Delete complete
+2026-06-19 17:02:42 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:02:42 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:02:42 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:02:42 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 17:02:44 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:02:44 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:02:44 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:02:44 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 17:09:07 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:09:07 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:09:07 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:09:07 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 17:09:11 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:09:11 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:09:11 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:09:11 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 17:09:14 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:09:14 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:09:14 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:09:14 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 17:09:14 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Apple_iOS Engineer'
+2026-06-19 17:09:14 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-19 17:09:14 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-19 17:09:14 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Apple' role='iOS Engineer'
+2026-06-19 17:09:14 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Apple' role='iOS Engineer'
+2026-06-19 17:09:14 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-19 17:09:20 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Technology",
+  "value_proposition": "Apple integrates on-device machine learning into its products to enhance user experience and functionality.",
+  "target_audience": "enterprise",
+  "email_goal": "recruitment"
+}
+```
+2026-06-19 17:09:20 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Technology' goal='recruitment' audience='enterprise'
+2026-06-19 17:09:20 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Technology' goal='recruitment'
+2026-06-19 17:09:20 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-19 17:09:26 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "short",
+  "word_range": "<100 words",
+  "key_hooks": [
+    "Proven proficiency in CoreML for on-device machine learning.",
+    "Strong command of Swift and Objective-C for robust iOS development.",
+    "Enthusiasm for enhancing user experience thr
+2026-06-19 17:09:26 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='short' hooks=4
+2026-06-19 17:09:26 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='short'
+2026-06-19 17:09:26 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 17:09:26 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 17:09:26 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 17:09:26 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database

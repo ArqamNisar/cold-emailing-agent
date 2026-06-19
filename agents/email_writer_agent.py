@@ -154,6 +154,7 @@ def email_writer_node(state: EmailWriterState) -> dict:
         "--- Global Writing Constraints ---\n"
         f"  • Tone       : {eff_tone}\n"
         f"  • Length     : {eff_length} ({eff_word_range})\n"
+        "  • Elaborate and develop details fully so that the length matches the target range. Do not write single-sentence placeholder paragraphs; ensure every hook and credential is fully written out and natural.\n"
         "  • Every variation MUST have a UNIQUE subject line and a noticeably different opening sentence.\n"
         "  • Personalise deeply: weave in the company's name, industry, focus, and value proposition.\n"
         "  • The sender is the CANDIDATE writing in first-person.\n"

@@ -76,7 +76,7 @@ JOB_INQUIRY_DIRECT = EmailTemplate(
     example_opening="I'm reaching out to express my strong interest in the {role} position at {company}.",
     tone="formal",
     length="medium",
-    word_range="100–150 words",
+    word_range="130–180 words",
     body_template=(
         "Opening  : State the role you're interested in and where you found it (or that you're reaching out proactively).\n"
         "Paragraph 1: Two sentences on your most relevant experience — skills + years + one measurable achievement.\n"
@@ -115,7 +115,7 @@ JOB_INQUIRY_VALUE = EmailTemplate(
     example_opening="I cut infrastructure costs by 40% at my last company — I'd like to explore if I can do the same for {company}.",
     tone="persuasive",
     length="medium",
-    word_range="120–180 words",
+    word_range="150–220 words",
     body_template=(
         "Opening  : Lead with your single strongest, quantified value claim — make the benefit obvious.\n"
         "Paragraph 1: Back the claim — one concrete project, metric, or outcome that proves it.\n"
@@ -158,8 +158,8 @@ NETWORKING_GENUINE = EmailTemplate(
     ],
     example_opening="I've been following your team's work on {company_focus} and your recent post on {topic} really resonated with me.",
     tone="conversational",
-    length="short",
-    word_range="80–120 words",
+    length="medium",
+    word_range="110–150 words",
     body_template=(
         "Opening  : Reference something specific about their work, company, or a public post — make it genuine.\n"
         "Paragraph 1: Briefly introduce yourself and the intersection between your work and theirs.\n"
@@ -197,8 +197,8 @@ NETWORKING_INSIGHT = EmailTemplate(
     ],
     example_opening="I've been thinking about how companies like {company} are approaching {company_focus} — and I have a take that might be worth 5 minutes of your time.",
     tone="conversational",
-    length="short",
-    word_range="80–100 words",
+    length="medium",
+    word_range="110–150 words",
     body_template=(
         "Opening  : Share a specific, non-obvious observation about their industry or company focus.\n"
         "Paragraph 1: Expand the insight briefly — 2 sentences max. Don't over-explain.\n"
@@ -241,8 +241,8 @@ PORTFOLIO_SHOWCASE = EmailTemplate(
     ],
     example_opening="I built something that I think you'll find relevant to what {company} is working on — I'd love your feedback.",
     tone="casual",
-    length="short",
-    word_range="80–120 words",
+    length="medium",
+    word_range="110–160 words",
     body_template=(
         "Opening  : Lead with the portfolio item — describe it in one intriguing sentence.\n"
         "Paragraph 1: Explain the relevance — how this work connects to the company's product/stack/domain.\n"
@@ -282,8 +282,8 @@ PORTFOLIO_CASE_STUDY = EmailTemplate(
     ],
     example_opening="Here's a 60-second case study that might be relevant to what {company} is tackling right now.",
     tone="persuasive",
-    length="medium",
-    word_range="130–180 words",
+    length="long",
+    word_range="160–240 words",
     body_template=(
         "Hook     : One sentence framing the case study — make it relevant to their world.\n"
         "Problem  : The challenge you or your client faced (1 sentence).\n"
@@ -328,7 +328,7 @@ SALES_PAIN_SOLUTION = EmailTemplate(
     example_opening="Most {company_focus} teams I talk to are losing hours every week to {pain_point} — and there's usually a faster way.",
     tone="persuasive",
     length="medium",
-    word_range="100–160 words",
+    word_range="130–190 words",
     body_template=(
         "Pain hook : Name a specific, realistic pain the target faces — be empathetic, not presumptuous.\n"
         "Pivot     : 'That's exactly the problem I help solve' — smooth transition.\n"
@@ -370,7 +370,7 @@ SALES_SOCIAL_PROOF = EmailTemplate(
     example_opening="We helped a company in {company_focus} cut operational costs by 35% in 90 days — here's how we did it.",
     tone="formal",
     length="medium",
-    word_range="120–170 words",
+    word_range="140–200 words",
     body_template=(
         "Proof opener : Lead with your strongest achievement or most relevant client result.\n"
         "Relevance    : Explain in 1 sentence why this result matters to the prospect.\n"
@@ -415,8 +415,8 @@ PARTNERSHIP_COLLAB = EmailTemplate(
     ],
     example_opening="I think there's a genuine opportunity for {company} and my team to create something that neither of us could build as well alone.",
     tone="conversational",
-    length="medium",
-    word_range="130–200 words",
+    length="long",
+    word_range="150–230 words",
     body_template=(
         "Hook       : Frame a shared opportunity — something both sides stand to gain.\n"
         "Their gain : What THEY get from this partnership (lead with their benefit, not yours).\n"
@@ -459,8 +459,8 @@ PARTNERSHIP_REFERRAL = EmailTemplate(
     ],
     example_opening="Our clients often need exactly what {company} offers — and I suspect yours might need what we do.",
     tone="casual",
-    length="short",
-    word_range="80–120 words",
+    length="medium",
+    word_range="110–160 words",
     body_template=(
         "Hook    : State the obvious overlap — 'Our clients need you, yours might need us.'\n"
         "Who you are: 1 sentence — what you do and who you serve.\n"
