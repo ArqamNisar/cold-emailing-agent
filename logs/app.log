@@ -1991,3 +1991,187 @@ langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling mo
 2026-06-20 19:10:11 | DEBUG    | cold_email.database                 | Database initialised successfully
 2026-06-20 19:10:11 | DEBUG    | cold_email.database                 | Fetching all leads from database
 2026-06-20 19:10:11 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 22:10:10 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:10:10 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:10:10 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:10:10 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 22:10:23 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:10:23 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:10:23 | INFO     | cold_email.__main__                 | Processing new CSV upload: 'sample_leads.csv'
+2026-06-20 22:10:23 | INFO     | cold_email.database                 | Saving batch of 5 leads to database
+2026-06-20 22:10:23 | INFO     | cold_email.database                 | Batch save complete — 5 leads persisted
+2026-06-20 22:10:23 | INFO     | cold_email.__main__                 | Successfully saved 5 leads from CSV
+2026-06-20 22:10:23 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:10:23 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:10:26 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:10:27 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:10:27 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:10:27 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:10:29 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:10:29 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:10:29 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='FinTech Solutions_-4065450055325056638'
+2026-06-20 22:10:29 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-20 22:10:29 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-20 22:10:29 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='FinTech Solutions'
+2026-06-20 22:10:29 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='FinTech Solutions'
+2026-06-20 22:10:29 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-20 22:10:33 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "FinTech",
+  "value_proposition": "FinTech Solutions specializes in enterprise banking fraud detection.",
+  "target_audience": "enterprise",
+  "email_goal": "sales"
+}
+```
+2026-06-20 22:10:33 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='FinTech' goal='sales' audience='enterprise'
+2026-06-20 22:10:33 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='FinTech' goal='sales'
+2026-06-20 22:10:33 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-20 22:10:39 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "formal",
+  "email_length": "short",
+  "word_range": "<100 words",
+  "key_hooks": [
+    "Directly enhance your enterprise banking fraud detection capabilities.",
+    "Achieve real-time anomaly detection for immediate threat response.",
+    "Uncover sophisticated fraud patterns us
+2026-06-20 22:10:39 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='formal' length='short' hooks=4
+2026-06-20 22:10:39 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='formal' length='short'
+2026-06-20 22:10:39 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:10:39 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:10:39 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:10:39 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:10:47 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:10:47 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:10:47 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:10:47 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:10:50 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:10:50 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:10:50 | INFO     | cold_email.__main__                 | Generate clicked | variations=1 | lead='FinTech Solutions_-4065450055325056638' | template='sales_pain_solution'
+2026-06-20 22:10:50 | INFO     | cold_email.email_writer_agent       | Compiling LangGraph email writer pipeline
+2026-06-20 22:10:50 | INFO     | cold_email.email_writer_agent       | LangGraph writer pipeline compiled successfully
+2026-06-20 22:10:50 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='FinTech Solutions' template='sales_pain_solution' variations=1
+2026-06-20 22:10:50 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='FinTech Solutions' template='sales_pain_solution' variations=1
+2026-06-20 22:10:50 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-20 22:10:58 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): ```json
+[
+  {
+    "subject": "Uncovering Sophisticated Fraud in Real-Time for FinTech Solutions",
+    "body": "Many enterprise banking fraud teams, even those as specialized as FinTech Solutions, grapple with the challenge of detecting increasingly sophisticated fraud patterns in real-time. It's often the case that traditional rule-based systems or siloed data struggle to keep pace with evolving threats, leading to delayed responses or an unmanageable volume of false positives.\n\nThat's exactly
+2026-06-20 22:10:58 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 1 email(s)
+2026-06-20 22:10:58 | INFO     | cold_email.__main__                 | Email writer returned 1 email(s)
+2026-06-20 22:10:58 | INFO     | cold_email.compliance_agent         | Compiling LangGraph compliance pipeline
+2026-06-20 22:10:58 | INFO     | cold_email.compliance_agent         | LangGraph compliance pipeline compiled successfully
+2026-06-20 22:10:58 | INFO     | cold_email.compliance_agent         | Invoking compliance checker graph | subject='Uncovering Sophisticated Fraud in Real-Time for FinTech Solutions'
+2026-06-20 22:10:58 | INFO     | cold_email.compliance_agent         | [compliance_checker] START | lead='FinTech Solutions'
+2026-06-20 22:10:58 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Invoking LLM
+2026-06-20 22:11:12 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Raw LLM response: {
+  "is_compliant": false,
+  "spam_keywords": [],
+  "ftc_status": {
+    "has_address": false,
+    "has_unsubscribe": false,
+    "issues": [
+      "Physical address is missing.",
+      "Unsubscribe option is missing."
+    ]
+  },
+  "claims_status": {
+    "has_misleading_claims": false,
+    "issues": [
+2026-06-20 22:11:12 | INFO     | cold_email.compliance_agent         | [compliance_checker] DONE | compliant=False | spam_words=0
+2026-06-20 22:11:12 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:11:12 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:11:13 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:11:13 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:12:02 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:12:02 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:12:02 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:12:02 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:12:02 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:12:02 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:15:14 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:15:14 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:15:15 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:15:15 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:15:18 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:15:18 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:15:18 | INFO     | cold_email.__main__                 | Generate clicked | variations=3 | lead='FinTech Solutions_-4065450055325056638' | template='sales_pain_solution'
+2026-06-20 22:15:18 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='FinTech Solutions' template='sales_pain_solution' variations=3
+2026-06-20 22:15:18 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='FinTech Solutions' template='sales_pain_solution' variations=3
+2026-06-20 22:15:18 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-20 22:15:33 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): ```json
+[
+  {
+    "subject": "Enhancing FinTech Solutions' Enterprise Fraud Detection in Real-Time",
+    "body": "Hi there,\n\nCatching the truly sophisticated, interconnected fraud rings that target enterprise banking clients is becoming incredibly difficult, often overwhelming even the most robust traditional detection systems. The challenge isn't just volume; it's uncovering the subtle, evolving patterns that bypass conventional rules.\n\nThat's precisely the problem our real-time anomaly det
+2026-06-20 22:15:33 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 3 email(s)
+2026-06-20 22:15:33 | INFO     | cold_email.__main__                 | Email writer returned 3 email(s)
+2026-06-20 22:15:33 | INFO     | cold_email.compliance_agent         | Invoking compliance checker graph | subject='Enhancing FinTech Solutions' Enterprise Fraud Detection in Real-Time'
+2026-06-20 22:15:33 | INFO     | cold_email.compliance_agent         | [compliance_checker] START | lead='FinTech Solutions'
+2026-06-20 22:15:33 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Invoking LLM
+2026-06-20 22:15:51 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Raw LLM response: {
+  "is_compliant": false,
+  "spam_keywords": [],
+  "ftc_status": {
+    "has_address": false,
+    "has_unsubscribe": false,
+    "issues": [
+      "Physical address is missing.",
+      "Unsubscribe option is missing."
+    ]
+  },
+  "claims_status": {
+    "has_misleading_claims": false,
+    "issues": [
+2026-06-20 22:15:51 | INFO     | cold_email.compliance_agent         | [compliance_checker] DONE | compliant=False | spam_words=0
+2026-06-20 22:15:51 | INFO     | cold_email.compliance_agent         | Invoking compliance checker graph | subject='Reducing FinTech Solutions' False Positives with Advanced Anomaly Detection'
+2026-06-20 22:15:51 | INFO     | cold_email.compliance_agent         | [compliance_checker] START | lead='FinTech Solutions'
+2026-06-20 22:15:51 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Invoking LLM
+2026-06-20 22:16:04 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Raw LLM response: {
+  "is_compliant": false,
+  "spam_keywords": [],
+  "ftc_status": {
+    "has_address": false,
+    "has_unsubscribe": false,
+    "issues": [
+      "Missing a clear physical address.",
+      "Missing a clear unsubscribe/opt-out option."
+    ]
+  },
+  "claims_status": {
+    "has_misleading_claims": fals
+2026-06-20 22:16:04 | INFO     | cold_email.compliance_agent         | [compliance_checker] DONE | compliant=False | spam_words=0
+2026-06-20 22:16:04 | INFO     | cold_email.compliance_agent         | Invoking compliance checker graph | subject='Uncovering Sophisticated Fraud Patterns for FinTech Solutions'
+2026-06-20 22:16:04 | INFO     | cold_email.compliance_agent         | [compliance_checker] START | lead='FinTech Solutions'
+2026-06-20 22:16:04 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Invoking LLM
+2026-06-20 22:16:29 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Raw LLM response: {
+  "is_compliant": false,
+  "spam_keywords": [],
+  "ftc_status": {
+    "has_address": false,
+    "has_unsubscribe": false,
+    "issues": [
+      "Missing a clear physical address or placeholder.",
+      "Missing a clear unsubscribe or opt-out option."
+    ]
+  },
+  "claims_status": {
+    "has_mislea
+2026-06-20 22:16:29 | INFO     | cold_email.compliance_agent         | [compliance_checker] DONE | compliant=False | spam_words=0
+2026-06-20 22:16:29 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:16:29 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:16:29 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:16:29 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:16:39 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:16:39 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:16:39 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:16:39 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:16:39 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:16:39 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 22:17:31 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:17:31 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:17:31 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 22:17:31 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 22:17:32 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 22:17:32 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database

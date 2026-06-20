@@ -7,6 +7,7 @@ import database
 from agents.analyzer_agent import run_analyzer
 from agents.email_writer_agent import run_email_writer
 from agents.compliance_agent import run_compliance_checker
+from agents.subject_agent import run_subject_writer
 from agents.email_templates import (
     ALL_TEMPLATES, CATEGORIES, CATEGORY_ICONS,
     get_template, get_templates_by_category
@@ -459,9 +460,10 @@ def render_email_generation_ui(lead, key_prefix):
                         st.warning(f"⚠️ AI writer encountered an issue — showing template-based drafts instead.")
                         emails = generate_mock_emails(company, company_focus, our_value_proposition, num_variations)
 
-                    # Run compliance and quality analysis on all generated variations
-                    with st.spinner("🛡️ Running compliance and quality analysis on variations…"):
+                    # Run compliance and subject line optimization analysis on all generated variations
+                    with st.spinner("🛡️ Analyzing compliance and generating optimized subject options…"):
                         for email in emails:
+                            # 1. Run compliance checker
                             try:
                                 comp_res = run_compliance_checker(
                                     subject=email["subject"],
@@ -482,6 +484,21 @@ def render_email_generation_ui(lead, key_prefix):
                                     "enhanced_body": email["body"],
                                     "error": str(comp_err)
                                 }
+                            
+                            # 2. Run subject writer
+                            try:
+                                subj_options = run_subject_writer(
+                                    lead=lead,
+                                    analysis=st.session_state[analysis_key],
+                                    email_body=email["body"]
+                                )
+                                email["subject_options"] = subj_options
+                            except Exception as subj_err:
+                                log.error("Subject writer failed for email: %s", subj_err, exc_info=True)
+                                email["subject_options"] = [
+                                    {"subject": email["subject"], "type": "Original Draft", "reason": "Original subject line fallback"}
+                                ]
+
                             email["original_subject"] = email["subject"]
                             email["original_body"] = email["body"]
                             email["enhanced_applied"] = False
@@ -501,6 +518,36 @@ def render_email_generation_ui(lead, key_prefix):
                     with tab:
                         email_data = emails[i]
                         st.markdown(f"**Subject:** {email_data['subject']}")
+
+                        # Subject Optimizer UI
+                        subject_options = email_data.get("subject_options")
+                        if subject_options:
+                            with st.expander("🎯 Subject Line Optimizer (Alternatives)", expanded=False):
+                                st.markdown("<p style='font-size:0.82rem;color:#94a3b8;margin-bottom:0.75rem;'>These subject lines are written by the Subject Writer Agent. Click 'Use Subject' to apply one directly.</p>", unsafe_allow_html=True)
+                                for idx, opt in enumerate(subject_options):
+                                    opt_subj = opt.get("subject", "")
+                                    opt_type = opt.get("type", "")
+                                    opt_reason = opt.get("reason", "")
+                                    
+                                    # Active badge if currently selected
+                                    is_active = (email_data["subject"] == opt_subj)
+                                    
+                                    col_opt1, col_opt2 = st.columns([4, 1])
+                                    with col_opt1:
+                                        badge_html = f'<span style="background:rgba(99, 102, 241, 0.15); color:#a5b4fc; padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.68rem; font-weight:600; margin-right: 0.5rem;">{opt_type}</span>'
+                                        st.markdown(f"{badge_html} **\"{opt_subj}\"**", unsafe_allow_html=True)
+                                        st.markdown(f"<p style='font-size:0.78rem; color:#94a3b8; margin-top:0.15rem; margin-left:0.25rem;'>💡 {opt_reason}</p>", unsafe_allow_html=True)
+                                    with col_opt2:
+                                        if is_active:
+                                            st.markdown("<p style='color:#10b981; font-weight:bold; font-size:0.85rem; text-align:right; margin-top:0.4rem;'>✓ Active</p>", unsafe_allow_html=True)
+                                        else:
+                                            if st.button("Use Subject", key=f"{key_prefix}_use_subj_{i}_{idx}", use_container_width=True, type="secondary"):
+                                                email_data["subject"] = opt_subj
+                                                st.session_state[session_key] = emails
+                                                st.success(f"Subject updated to: \"{opt_subj}\"")
+                                                st.rerun()
+                                    if idx < len(subject_options) - 1:
+                                        st.markdown("<hr style='margin:0.5rem 0; border:0; border-top:1px solid rgba(255,255,255,0.05);'>", unsafe_allow_html=True)
                         email_html = (
                             f'<div style="'
                             f'background: rgba(30, 41, 59, 0.45);'
