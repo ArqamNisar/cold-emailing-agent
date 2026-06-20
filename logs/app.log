@@ -1656,3 +1656,338 @@ langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling mo
 2026-06-19 21:13:12 | INFO     | cold_email.__main__                 | Initialising database at 'leads.db'
 2026-06-19 21:13:12 | INFO     | cold_email.__main__                 | Old schema detected in 'leads' table. Dropping table for recreation.
 2026-06-19 21:13:12 | DEBUG    | cold_email.__main__                 | Database initialised successfully
+2026-06-19 21:14:09 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:14:09 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:14:09 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:14:09 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-19 21:14:38 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:14:38 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:14:38 | INFO     | cold_email.__main__                 | Processing new CSV upload: 'sample_leads.csv'
+2026-06-19 21:14:38 | INFO     | cold_email.database                 | Saving batch of 5 leads to database
+2026-06-19 21:14:39 | INFO     | cold_email.database                 | Batch save complete — 5 leads persisted
+2026-06-19 21:14:39 | INFO     | cold_email.__main__                 | Successfully saved 5 leads from CSV
+2026-06-19 21:14:39 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:14:39 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 21:14:42 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:14:42 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:14:42 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:14:42 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 21:14:44 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:14:44 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:14:44 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='FinTech Solutions_-3036450637368736964'
+2026-06-19 21:14:44 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-19 21:14:44 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-19 21:14:44 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='FinTech Solutions'
+2026-06-19 21:14:44 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='FinTech Solutions'
+2026-06-19 21:14:44 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-19 21:14:48 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "FinTech",
+  "value_proposition": "FinTech Solutions focuses on enterprise banking fraud detection.",
+  "target_audience": "enterprise",
+  "email_goal": "partnership"
+}
+```
+2026-06-19 21:14:48 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='FinTech' goal='partnership' audience='enterprise'
+2026-06-19 21:14:48 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='FinTech' goal='partnership'
+2026-06-19 21:14:48 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-19 21:14:54 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "medium",
+  "word_range": "100–200 words",
+  "key_hooks": [
+    "Directly enhance your enterprise banking fraud detection with real-time capabilities.",
+    "Leverage graph database technology to uncover complex, hidden fraud patterns instantly.",
+
+2026-06-19 21:14:54 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='medium' hooks=4
+2026-06-19 21:14:54 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='medium'
+2026-06-19 21:14:54 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:14:54 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:14:55 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:14:55 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 21:15:08 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:15:08 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:15:08 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:15:08 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 21:15:19 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:15:19 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:15:19 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:15:19 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:15:19 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:15:19 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 21:15:25 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:15:25 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:15:25 | INFO     | cold_email.__main__                 | Generate clicked | variations=2 | lead='FinTech Solutions_-3036450637368736964' | template='sales_social_proof'
+2026-06-19 21:15:25 | INFO     | cold_email.email_writer_agent       | Compiling LangGraph email writer pipeline
+2026-06-19 21:15:25 | INFO     | cold_email.email_writer_agent       | LangGraph writer pipeline compiled successfully
+2026-06-19 21:15:25 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='FinTech Solutions' template='sales_social_proof' variations=2
+2026-06-19 21:15:25 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='FinTech Solutions' template='sales_social_proof' variations=2
+2026-06-19 21:15:25 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-19 21:15:33 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): [
+  {
+    "subject": "Enhancing Enterprise Banking Fraud Detection: A Proven Partnership Model",
+    "body": "Our real-time anomaly detection engine recently enabled a top-tier global bank to reduce undetected fraudulent transactions by 38% within their enterprise banking division, identifying complex fraud rings that traditional systems missed. Companies like FinTech Solutions, focused on leading enterprise banking fraud detection, face the persistent challenge of evolving sophisticated threats
+2026-06-19 21:15:33 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 2 email(s)
+2026-06-19 21:15:33 | INFO     | cold_email.__main__                 | Email writer returned 2 email(s)
+2026-06-19 21:15:33 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:15:33 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:15:33 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:15:33 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 21:16:19 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:16:19 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:16:19 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:16:19 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-19 21:17:10 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:17:10 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:17:10 | INFO     | cold_email.__main__                 | Processing new CSV upload: 'sample_leads.csv'
+2026-06-19 21:17:10 | INFO     | cold_email.database                 | Saving batch of 5 leads to database
+2026-06-19 21:17:11 | INFO     | cold_email.database                 | Batch save complete — 5 leads persisted
+2026-06-19 21:17:11 | INFO     | cold_email.__main__                 | Successfully saved 5 leads from CSV
+2026-06-19 21:17:11 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:17:11 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:17:20 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:17:20 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:17:21 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:17:21 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:17:28 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:17:28 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:17:29 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='FinTech Solutions_-3036450637368736964'
+2026-06-19 21:17:29 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='FinTech Solutions'
+2026-06-19 21:17:29 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='FinTech Solutions'
+2026-06-19 21:17:29 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-19 21:17:31 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Financial Technology",
+  "value_proposition": "FinTech Solutions specializes in enterprise banking fraud detection.",
+  "target_audience": "enterprise",
+  "email_goal": "sales"
+}
+```
+2026-06-19 21:17:31 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Financial Technology' goal='sales' audience='enterprise'
+2026-06-19 21:17:31 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Financial Technology' goal='sales'
+2026-06-19 21:17:31 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-19 21:17:39 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "medium",
+  "word_range": "100–200 words",
+  "key_hooks": [
+    "Elevate your enterprise banking fraud detection capabilities.",
+    "Prevent fraud losses instantly with real-time anomaly detection.",
+    "Uncover sophisticated, interconnected frau
+2026-06-19 21:17:39 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='medium' hooks=4
+2026-06-19 21:17:39 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='medium'
+2026-06-19 21:17:40 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:17:40 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:17:40 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:17:40 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:18:05 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:18:05 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:18:05 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:18:05 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:18:05 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:18:05 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:18:08 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:18:08 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:18:08 | INFO     | cold_email.__main__                 | Generate clicked | variations=3 | lead='FinTech Solutions_-3036450637368736964' | template='sales_social_proof'
+2026-06-19 21:18:08 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='FinTech Solutions' template='sales_social_proof' variations=3
+2026-06-19 21:18:08 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='FinTech Solutions' template='sales_social_proof' variations=3
+2026-06-19 21:18:08 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-19 21:18:21 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): ```json
+[
+  {
+    "subject": "Revolutionizing Enterprise Fraud Detection: A Proven Approach for FinTech Solutions",
+    "body": "Our real-time anomaly detection engine recently helped a major financial institution reduce undetected fraud losses by 35% within six months, by identifying complex, interconnected schemes previously missed by traditional systems. Companies like FinTech Solutions, specializing in enterprise banking fraud detection, face similar pressures to enhance their capabilities a
+2026-06-19 21:18:21 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 3 email(s)
+2026-06-19 21:18:21 | INFO     | cold_email.__main__                 | Email writer returned 3 email(s)
+2026-06-19 21:18:21 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:18:21 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:18:21 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:18:21 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:18:49 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:18:49 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:18:49 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:18:49 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:18:49 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:18:49 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:18:52 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:18:52 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:18:52 | INFO     | cold_email.__main__                 | Generate clicked | variations=3 | lead='FinTech Solutions_-3036450637368736964' | template='partnership_collab'
+2026-06-19 21:18:52 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='FinTech Solutions' template='partnership_collab' variations=3
+2026-06-19 21:18:52 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='FinTech Solutions' template='partnership_collab' variations=3
+2026-06-19 21:18:52 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-19 21:19:05 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): ```json
+[
+  {
+    "subject": "Exploring a Synergistic Partnership: Real-time Fraud Detection with FinTech Solutions",
+    "body": "Hi [Contact Name],\n\nWe see a powerful opportunity to significantly elevate enterprise banking fraud detection capabilities by combining our strengths. Imagine empowering FinTech Solutions' clients with instant prevention of fraud losses, all while uncovering sophisticated, interconnected schemes that traditional systems often miss. This collaboration could position
+2026-06-19 21:19:05 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 3 email(s)
+2026-06-19 21:19:05 | INFO     | cold_email.__main__                 | Email writer returned 3 email(s)
+2026-06-19 21:19:05 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:19:05 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:19:05 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:19:05 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:23:30 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:23:30 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:23:30 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:23:30 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:26:53 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:26:53 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:26:53 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:26:53 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-19 21:26:56 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-19 21:26:56 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-19 21:26:56 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-19 21:26:56 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-20 18:49:56 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-20 18:50:08 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:50:08 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:50:10 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 18:50:10 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-20 18:51:27 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:51:27 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:51:27 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 18:51:27 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-20 18:55:23 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:55:23 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:55:23 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 18:55:23 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-20 18:55:25 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:55:25 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:55:25 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 18:55:25 | INFO     | cold_email.database                 | Fetched 10 lead(s) from database
+2026-06-20 18:55:25 | INFO     | cold_email.database                 | Deleting 10 lead(s) with IDs: [6, 7, 8, 9, 10, 1, 2, 3, 4, 5]
+2026-06-20 18:55:26 | INFO     | cold_email.database                 | Delete complete
+2026-06-20 18:55:26 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:55:26 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:55:26 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 18:55:26 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 18:59:16 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:59:16 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:59:16 | INFO     | cold_email.__main__                 | Processing new CSV upload: 'sample_leads.csv'
+2026-06-20 18:59:17 | INFO     | cold_email.database                 | Saving batch of 5 leads to database
+2026-06-20 18:59:17 | INFO     | cold_email.database                 | Batch save complete — 5 leads persisted
+2026-06-20 18:59:17 | INFO     | cold_email.__main__                 | Successfully saved 5 leads from CSV
+2026-06-20 18:59:17 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 18:59:17 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 18:59:28 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:59:28 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:59:28 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 18:59:28 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 18:59:40 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:59:40 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:59:40 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Solaris Power_3445932973958849079'
+2026-06-20 18:59:40 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-20 18:59:40 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-20 18:59:40 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Solaris Power'
+2026-06-20 18:59:40 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Solaris Power'
+2026-06-20 18:59:40 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-20 18:59:44 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Renewable energy",
+  "value_proposition": "Solaris Power provides analytics for renewable energy grids.",
+  "target_audience": "enterprise",
+  "email_goal": "sales"
+}
+```
+2026-06-20 18:59:44 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Renewable energy' goal='sales' audience='enterprise'
+2026-06-20 18:59:44 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Renewable energy' goal='sales'
+2026-06-20 18:59:44 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-20 18:59:50 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "medium",
+  "word_range": "100–200 words",
+  "key_hooks": [
+    "Transform existing grid analytics into actionable predictive maintenance.",
+    "Significantly reduce downtime and operational costs for renewable assets.",
+    "Extend the lifespan a
+2026-06-20 18:59:50 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='medium' hooks=4
+2026-06-20 18:59:50 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='medium'
+2026-06-20 18:59:50 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 18:59:50 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 18:59:51 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 18:59:51 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 19:00:25 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:00:25 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:00:25 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:00:25 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 19:01:19 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:01:19 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:01:19 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:01:19 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:01:19 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:01:19 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 19:01:23 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:01:23 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:01:23 | INFO     | cold_email.__main__                 | Generate clicked | variations=2 | lead='Solaris Power_3445932973958849079' | template='sales_social_proof'
+2026-06-20 19:01:24 | INFO     | cold_email.email_writer_agent       | Compiling LangGraph email writer pipeline
+2026-06-20 19:01:24 | INFO     | cold_email.email_writer_agent       | LangGraph writer pipeline compiled successfully
+2026-06-20 19:01:24 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='Solaris Power' template='sales_social_proof' variations=2
+2026-06-20 19:01:24 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='Solaris Power' template='sales_social_proof' variations=2
+2026-06-20 19:01:24 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-20 19:01:38 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): ```json
+[
+  {
+    "subject": "Proven 30% Downtime Reduction for Renewable Assets – Solaris Power",
+    "body": "Our recent partnership with a major European utility provider resulted in a 30% reduction in unplanned downtime across their wind and solar farm assets within the first year of deployment. Companies like Solaris Power, focused intently on optimizing renewable energy grids, consistently face the challenge of minimizing costly operational interruptions and maximizing asset longevity.\n\n
+2026-06-20 19:01:38 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 2 email(s)
+2026-06-20 19:01:38 | INFO     | cold_email.__main__                 | Email writer returned 2 email(s)
+2026-06-20 19:01:38 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:01:38 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:01:38 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:01:38 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 19:05:46 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:05:46 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:05:46 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:05:46 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 19:05:48 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:05:48 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:05:48 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:05:49 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-20 19:05:49 | INFO     | cold_email.database                 | Deleting 5 lead(s) with IDs: [11, 12, 13, 14, 15]
+2026-06-20 19:05:49 | INFO     | cold_email.database                 | Delete complete
+2026-06-20 19:05:49 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:05:49 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:05:49 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:05:49 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 19:05:57 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:05:57 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:05:57 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:05:57 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 19:08:18 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:08:18 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:08:18 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:08:18 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 19:08:36 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:08:36 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:08:37 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:08:37 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 19:09:20 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:09:20 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:09:21 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:09:21 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 19:09:57 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:09:57 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:09:57 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:09:57 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:09:57 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:09:57 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database
+2026-06-20 19:10:01 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:10:01 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:10:01 | INFO     | cold_email.__main__                 | Generate clicked | variations=2 | lead='Solaris Power_3445932973958849079' | template='sales_pain_solution'
+2026-06-20 19:10:01 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='Solaris Power' template='sales_pain_solution' variations=2
+2026-06-20 19:10:01 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='Solaris Power' template='sales_pain_solution' variations=2
+2026-06-20 19:10:01 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-20 19:10:11 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): ```json
+[
+  {
+    "subject": "Transforming Solaris Power's Grid Analytics into Predictive Power",
+    "body": "Hi,\n\nEven with Solaris Power's advanced analytics for renewable energy grids, many enterprise operators still face the critical challenge of transitioning from reactive to truly proactive maintenance. The cost of unexpected downtime and the pressure to extend the lifespan of high-value assets can be immense, often despite having a wealth of data available.\n\nThat's exactly the proble
+2026-06-20 19:10:11 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 2 email(s)
+2026-06-20 19:10:11 | INFO     | cold_email.__main__                 | Email writer returned 2 email(s)
+2026-06-20 19:10:11 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-20 19:10:11 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-20 19:10:11 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-20 19:10:11 | INFO     | cold_email.database                 | Fetched 0 lead(s) from database

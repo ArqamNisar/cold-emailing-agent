@@ -6,6 +6,7 @@ load_dotenv()
 import database
 from agents.analyzer_agent import run_analyzer
 from agents.email_writer_agent import run_email_writer
+from agents.compliance_agent import run_compliance_checker
 from agents.email_templates import (
     ALL_TEMPLATES, CATEGORIES, CATEGORY_ICONS,
     get_template, get_templates_by_category
@@ -19,7 +20,7 @@ database.init_db()
 
 # Page setup
 st.set_page_config(
-    page_title="Cold Email Lead Generator",
+    page_title="Cold Email Generator System",
     page_icon="✉️",
     layout="wide"
 )
@@ -201,7 +202,7 @@ st.markdown("""
 # App Header
 st.markdown("""
 <div class="title-container">
-    <h1 class="main-title">Cold Email Lead Generator</h1>
+    <h1 class="main-title">Cold Email Generator</h1>
     <p class="subtitle">Streamline your cold outreach by importing and managing targeted leads</p>
 </div>
 """, unsafe_allow_html=True)
@@ -458,6 +459,33 @@ def render_email_generation_ui(lead, key_prefix):
                         st.warning(f"⚠️ AI writer encountered an issue — showing template-based drafts instead.")
                         emails = generate_mock_emails(company, company_focus, our_value_proposition, num_variations)
 
+                    # Run compliance and quality analysis on all generated variations
+                    with st.spinner("🛡️ Running compliance and quality analysis on variations…"):
+                        for email in emails:
+                            try:
+                                comp_res = run_compliance_checker(
+                                    subject=email["subject"],
+                                    body=email["body"],
+                                    lead=lead
+                                )
+                                email["compliance"] = comp_res
+                            except Exception as comp_err:
+                                log.error("Compliance checker failed for email: %s", comp_err, exc_info=True)
+                                email["compliance"] = {
+                                    "is_compliant": True,
+                                    "spam_keywords": [],
+                                    "ftc_status": {"has_address": True, "has_unsubscribe": True, "issues": []},
+                                    "claims_status": {"has_misleading_claims": False, "issues": []},
+                                    "readability": {"sentence_length_ok": True, "complexity": "Medium", "score_desc": "Good", "issues": []},
+                                    "engagement": {"has_questions": True, "personalization_ok": True, "suggestions": []},
+                                    "enhanced_subject": email["subject"],
+                                    "enhanced_body": email["body"],
+                                    "error": str(comp_err)
+                                }
+                            email["original_subject"] = email["subject"]
+                            email["original_body"] = email["body"]
+                            email["enhanced_applied"] = False
+
                     st.session_state[session_key] = emails
                     st.rerun()
 
@@ -488,6 +516,149 @@ def render_email_generation_ui(lead, key_prefix):
                             f'">{email_data["body"]}</div>'
                         )
                         st.markdown(email_html, unsafe_allow_html=True)
+
+                        # Compliance analysis visualization
+                        comp = email_data.get("compliance")
+                        if comp:
+                            st.write("")
+                            with st.container(border=True):
+                                # Header section with status and actions
+                                status_col, action_col = st.columns([3, 2])
+                                is_ok = comp.get("is_compliant", True)
+                                
+                                with status_col:
+                                    if is_ok:
+                                        st.markdown("#### 🛡️ Compliance & Quality Check: <span style='color:#10b981;'>🟢 Fully Compliant & Optimized</span>", unsafe_allow_html=True)
+                                    else:
+                                        st.markdown("#### 🛡️ Compliance & Quality Check: <span style='color:#fbbf24;'>🟡 Quality/Compliance Enhancements Available</span>", unsafe_allow_html=True)
+                                
+                                with action_col:
+                                    applied = email_data.get("enhanced_applied", False)
+                                    if not applied:
+                                        if st.button("✨ Apply Enhancements", key=f"{key_prefix}_apply_enh_{i}", type="primary", use_container_width=True):
+                                            email_data["subject"] = comp.get("enhanced_subject", email_data["subject"])
+                                            email_data["body"] = comp.get("enhanced_body", email_data["body"])
+                                            email_data["enhanced_applied"] = True
+                                            st.session_state[session_key] = emails
+                                            st.success("Enhancements applied!")
+                                            st.rerun()
+                                    else:
+                                        if st.button("🔄 Revert to Original Draft", key=f"{key_prefix}_revert_{i}", type="secondary", use_container_width=True):
+                                            email_data["subject"] = email_data.get("original_subject", email_data["subject"])
+                                            email_data["body"] = email_data.get("original_body", email_data["body"])
+                                            email_data["enhanced_applied"] = False
+                                            st.session_state[session_key] = emails
+                                            st.success("Reverted to original!")
+                                            st.rerun()
+                                            
+                                if applied:
+                                    st.markdown("<p style='font-size:0.85rem;color:#10b981;font-weight:600;margin-top:-0.5rem;'>✨ Applied compliance enhancements to this draft (spam words replaced, FTC footer added, readability improved).</p>", unsafe_allow_html=True)
+
+                                # Create sub-tabs for evaluation categories
+                                comp_tabs = st.tabs([
+                                    "🚨 Spam Keywords", 
+                                    "⚖️ FTC CAN-SPAM", 
+                                    "📝 Readability & Claims", 
+                                    "🎯 Engagement"
+                                ])
+
+                                # 1. Spam Keywords
+                                with comp_tabs[0]:
+                                    spam_words = comp.get("spam_keywords", [])
+                                    if not spam_words:
+                                        st.success("✅ No typical spam trigger keywords detected. Great job!")
+                                    else:
+                                        st.warning(f"⚠️ Flagged {len(spam_words)} potential spam filter trigger keyword(s):")
+                                        table_rows = ""
+                                        for sw in spam_words:
+                                            word = sw.get("keyword", "")
+                                            alt = sw.get("alternative", "")
+                                            reason = sw.get("reason", "")
+                                            table_rows += (
+                                                f'<tr>'
+                                                f'<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #ef4444; font-weight: bold;">{word}</td>'
+                                                f'<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #10b981; font-weight: bold;">{alt}</td>'
+                                                f'<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #94a3b8;">{reason}</td>'
+                                                f'</tr>'
+                                            )
+                                        
+                                        table_html = (
+                                            f'<table style="width:100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; background: rgba(30, 41, 59, 0.25);">'
+                                            f'<thead>'
+                                            f'<tr style="border-bottom: 2px solid rgba(255,255,255,0.1); text-align: left;">'
+                                            f'<th style="padding: 8px; color: #e2e8f0;">Flagged Keyword</th>'
+                                            f'<th style="padding: 8px; color: #e2e8f0;">Recommended Alternative</th>'
+                                            f'<th style="padding: 8px; color: #e2e8f0;">Reason</th>'
+                                            f'</tr>'
+                                            f'</thead>'
+                                            f'<tbody>{table_rows}</tbody>'
+                                            f'</table>'
+                                        )
+                                        st.markdown(table_html, unsafe_allow_html=True)
+
+                                # 2. FTC CAN-SPAM Rules
+                                with comp_tabs[1]:
+                                    ftc = comp.get("ftc_status", {})
+                                    has_addr = ftc.get("has_address", True)
+                                    has_unsub = ftc.get("has_unsubscribe", True)
+                                    ftc_issues = ftc.get("issues", [])
+
+                                    col_ftc1, col_ftc2 = st.columns(2)
+                                    with col_ftc1:
+                                        if has_addr:
+                                            st.markdown("📍 **Physical Address Notice:** <span style='color:#10b981;'>✅ Present</span>", unsafe_allow_html=True)
+                                        else:
+                                            st.markdown("📍 **Physical Address Notice:** <span style='color:#ef4444;'>❌ Missing Location Info</span>", unsafe_allow_html=True)
+                                    with col_ftc2:
+                                        if has_unsub:
+                                            st.markdown("✉️ **Opt-out Mechanism:** <span style='color:#10b981;'>✅ Present</span>", unsafe_allow_html=True)
+                                        else:
+                                            st.markdown("✉️ **Opt-out Mechanism:** <span style='color:#ef4444;'>❌ Missing Unsubscribe Option</span>", unsafe_allow_html=True)
+                                    
+                                    if ftc_issues:
+                                        st.markdown("<p style='font-size:0.85rem;color:#ef4444;margin-top:0.5rem;'><b>Issues Found:</b></p>", unsafe_allow_html=True)
+                                        for issue in ftc_issues:
+                                            st.markdown(f"- {issue}")
+                                    else:
+                                        st.success("✅ This draft complies with key FTC CAN-SPAM requirements (offers an opt-out choice and physical location identifier).")
+
+                                # 3. Readability & Claims
+                                with comp_tabs[2]:
+                                    read = comp.get("readability", {})
+                                    claims = comp.get("claims_status", {})
+                                    
+                                    st.markdown(f"📊 **Sentence Length & Style:** {read.get('score_desc', '')}")
+                                    st.markdown(f"🏷️ **Complexity Level:** `{read.get('complexity', 'Medium')}`")
+                                    
+                                    read_issues = read.get("issues", [])
+                                    if read_issues:
+                                        for ri in read_issues:
+                                            st.markdown(f"- 📝 {ri}")
+                                            
+                                    has_claims = claims.get("has_misleading_claims", False)
+                                    claims_issues = claims.get("issues", [])
+                                    
+                                    if has_claims:
+                                        st.warning("⚠️ **Misleading or Exaggerated Claims detected:**")
+                                        for ci in claims_issues:
+                                            st.markdown(f"- 🔍 {ci}")
+                                    else:
+                                        st.success("✅ No misleading promises or exaggerated return-on-investment guarantees found.")
+
+                                # 4. Engagement
+                                with comp_tabs[3]:
+                                    eng = comp.get("engagement", {})
+                                    has_q = eng.get("has_questions", True)
+                                    p_ok = eng.get("personalization_ok", True)
+                                    suggestions = eng.get("suggestions", [])
+                                    
+                                    st.markdown(f"❓ **Call-To-Action / Engagement Question:** {'✅ Present' if has_q else '❌ Missing clear next-step question'}")
+                                    st.markdown(f"👤 **Lead Personalization:** {'✅ Tailored to prospect focus & value prop' if p_ok else '❌ Low personalization context'}")
+                                    
+                                    if suggestions:
+                                        st.markdown("<p style='font-size:0.85rem;color:#94a3b8;margin-top:0.5rem;'><b>Engagement Suggestions:</b></p>", unsafe_allow_html=True)
+                                        for sug in suggestions:
+                                            st.markdown(f"- 🎯 {sug}")
 
 # --- TAB 1: CSV IMPORT & PARSE ---
 with tab_csv:
