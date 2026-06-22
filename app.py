@@ -1,9 +1,12 @@
 import streamlit as st
 import pandas as pd
+import json
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
 import database
+import gmail_service
 from agents.analyzer_agent import run_analyzer
 from agents.email_writer_agent import run_email_writer
 from agents.compliance_agent import run_compliance_checker
@@ -210,9 +213,10 @@ st.markdown("""
 
 
 # Setup navigation tabs
-tab_csv, tab_db = st.tabs([
+tab_csv, tab_db, tab_settings = st.tabs([
     "📥 Upload Leads", 
-    "🗂️ Leads"
+    "🗂️ Leads",
+    "⚙️ Gmail Integration"
 ])
 
 def auto_map_columns(columns):
@@ -707,6 +711,69 @@ def render_email_generation_ui(lead, key_prefix):
                                         for sug in suggestions:
                                             st.markdown(f"- 🎯 {sug}")
 
+                        # ── Edit and Send via Gmail UI ─────────────────────────
+                        st.write("")
+                        with st.container(border=True):
+                            st.markdown("#### 📧 Edit & Send via Gmail")
+                            
+                            # Retrieve lead email address from lead object
+                            lead_email = lead.get("Email", lead.get("email", lead.get("Email Address", "")))
+                            if hasattr(lead_email, "iloc"):
+                                lead_email = lead_email.iloc[0] if not lead_email.empty else ""
+                            lead_email = str(lead_email).strip()
+                            
+                            # Recipient Address Input
+                            edit_recipient = st.text_input(
+                                "Recipient Email Address",
+                                value=lead_email,
+                                key=f"{key_prefix}_send_to_{i}"
+                            )
+                            
+                            # Subject Line Input
+                            edit_subject = st.text_input(
+                                "Subject Line",
+                                value=email_data["subject"],
+                                key=f"{key_prefix}_send_subj_{i}"
+                            )
+                            
+                            # Email Body Text Area
+                            edit_body = st.text_area(
+                                "Email Body",
+                                value=email_data["body"],
+                                height=280,
+                                key=f"{key_prefix}_send_body_{i}"
+                            )
+                            
+                            # Check Gmail authorization status
+                            is_gmail_connected = False
+                            try:
+                                is_gmail_connected = gmail_service.is_authenticated()
+                            except Exception:
+                                pass
+                                
+                            if not is_gmail_connected:
+                                st.warning("⚠️ Gmail is not connected. Please go to the **⚙️ Gmail Integration** tab to authorize your account.")
+                                st.button("🚀 Send Email", key=f"{key_prefix}_send_btn_{i}", disabled=True, use_container_width=True)
+                            else:
+                                if st.button("🚀 Send Email via Gmail", key=f"{key_prefix}_send_btn_{i}", type="primary", use_container_width=True):
+                                    if not edit_recipient:
+                                        st.error("Error: Recipient email address is required.")
+                                    elif not edit_subject:
+                                        st.error("Error: Subject line is required.")
+                                    elif not edit_body:
+                                        st.error("Error: Email body is required.")
+                                    else:
+                                        with st.spinner("Sending email..."):
+                                            try:
+                                                gmail_service.send_email(
+                                                    to_email=edit_recipient,
+                                                    subject=edit_subject,
+                                                    body_text=edit_body
+                                                )
+                                                st.success(f"🎉 Email sent successfully to **{edit_recipient}**!")
+                                            except Exception as send_err:
+                                                st.error(f"❌ Failed to send email: {send_err}")
+
 # --- TAB 1: CSV IMPORT & PARSE ---
 with tab_csv:
     st.markdown("### 📥 Import Leads from CSV")
@@ -908,5 +975,89 @@ with tab_db:
                 
                 # Render the email generation UI
                 render_email_generation_ui(chosen_lead, "db")
+
+# --- TAB 3: GMAIL SETTINGS ---
+with tab_settings:
+    st.markdown("### ⚙️ Gmail API Integration")
+    st.write("Connect your Gmail account to send generated email variations directly to your leads.")
+
+    # Check connection status
+    try:
+        is_conn = gmail_service.is_authenticated()
+    except Exception as e:
+        is_conn = False
+        st.error(f"Error checking Gmail status: {e}")
+
+    if is_conn:
+        email_addr = gmail_service.get_profile_email()
+        if email_addr:
+            st.success(f"🟢 Gmail Account Connected: **{email_addr}**")
+        else:
+            st.success("🟢 Gmail Account Connected")
+            
+        if st.button("🔴 Disconnect Gmail Account", key="disconnect_gmail", type="secondary"):
+            try:
+                gmail_service.disconnect()
+                st.success("Disconnected Gmail account successfully.")
+                st.rerun()
+            except Exception as disconnect_err:
+                st.error(f"Failed to disconnect: {disconnect_err}")
+    else:
+        st.warning("🔴 Gmail Account Disconnected")
+        st.markdown("---")
+        st.markdown("#### Setup Instructions")
+        st.markdown("""
+        To send emails via Gmail, you need Google OAuth Client credentials:
+        1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+        2. Create a new project or select an existing one.
+        3. Enable the **Gmail API** (search for "Gmail API" and click Enable).
+        4. Configure the **OAuth consent screen** (choose User Type: **External**, enter app name/email, and add scope `https://www.googleapis.com/auth/gmail.send`). Add your email under Test Users.
+        5. Go to **Credentials** -> **Create Credentials** -> **OAuth client ID**. Select Application type: **Desktop app**, name it, and click Create.
+        6. Download the JSON credentials file, rename it to `credentials.json`, and upload it below.
+        """)
+
+        # File uploader for credentials.json
+        uploaded_creds = st.file_uploader("Upload credentials.json file", type=["json"], key="creds_uploader")
+        if uploaded_creds is not None:
+            try:
+                creds_data = json.load(uploaded_creds)
+                # Verify that it is a valid Google OAuth Client secrets file
+                if 'installed' in creds_data:
+                    with open('credentials.json', 'w') as f:
+                        json.dump(creds_data, f)
+                    st.success("credentials.json uploaded and saved successfully!")
+                    st.rerun()
+                elif 'web' in creds_data:
+                    st.error("⚠️ You uploaded a Web Application credentials file. Google OAuth requires **Desktop Application** credentials for local desktop scripts to avoid 'redirect_uri_mismatch' errors. Please follow step 5 of the instructions above to create a Desktop app credential.")
+                else:
+                    st.error("Invalid credentials file format. Please upload a valid client secrets JSON file.")
+            except Exception as e:
+                st.error(f"Error reading credentials file: {e}")
+
+        # If credentials.json exists, show authorization button
+        if os.path.exists('credentials.json'):
+            # Detect type
+            is_desktop_creds = False
+            try:
+                with open('credentials.json', 'r') as f:
+                    c_data = json.load(f)
+                    is_desktop_creds = 'installed' in c_data
+            except Exception:
+                pass
+
+            if not is_desktop_creds:
+                st.error("⚠️ The saved `credentials.json` is a **Web Application** credential, which causes `redirect_uri_mismatch` errors on sign in. Please overwrite it by uploading a **Desktop Application** credential (follow step 5 above).")
+            
+            st.info("ℹ️ credentials.json is present. Click the button below to authorize the application.")
+            if st.button("🔗 Connect Gmail Account", key="connect_gmail", type="primary", disabled=not is_desktop_creds):
+                with st.spinner("Opening browser for authorization..."):
+                    try:
+                        gmail_service.authenticate()
+                        st.success("Gmail account authorized successfully!")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Authentication failed: {e}")
+        else:
+            st.info("ℹ️ Please upload credentials.json to enable the connection button.")
             
 
