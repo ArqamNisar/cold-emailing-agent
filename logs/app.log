@@ -4850,3 +4850,273 @@ langchain_google_genai.chat_models.ChatGoogleGenerativeAIError: Error calling mo
 2026-06-22 18:15:04 | INFO     | cold_email.subject_agent            | Invoking subject writer graph | company='Solaris Power'
 2026-06-22 18:15:04 | INFO     | cold_email.subject_agent            | [subject_writer] START | lead='Solaris Power'
 2026-06-22 18:15:04 | DEBUG    | cold_email.subject_agent            | [subject_writer] Invoking LLM
+2026-06-22 18:17:51 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-22 18:18:01 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:18:01 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:18:01 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:18:01 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:18:03 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:18:03 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:18:03 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:18:03 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:18:03 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:18:03 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:18:03 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:18:03 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:18:03 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:18:03 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:18:19 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:18:31 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:18:32 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:18:32 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:18:32 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:18:32 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:18:32 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:18:32 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:18:32 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:18:32 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:18:32 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:18:32 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:18:32 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:18:33 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:18:33 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:18:33 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:18:33 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:18:33 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:18:33 | INFO     | cold_email.__main__                 | Run Lead Analysis clicked | lead='Solaris Power_3618796055371515865'
+2026-06-22 18:18:33 | INFO     | cold_email.analyzer_agent           | Compiling LangGraph analyzer pipeline
+2026-06-22 18:18:33 | INFO     | cold_email.analyzer_agent           | LangGraph pipeline compiled successfully
+2026-06-22 18:18:33 | INFO     | cold_email.analyzer_agent           | Invoking analyzer graph | company='Solaris Power'
+2026-06-22 18:18:34 | INFO     | cold_email.analyzer_agent           | [input_analyzer] START | company='Solaris Power'
+2026-06-22 18:18:34 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Invoking Gemini LLM
+2026-06-22 18:18:59 | DEBUG    | cold_email.analyzer_agent           | [input_analyzer] Raw LLM response: ```json
+{
+  "company_industry": "Renewable Energy",
+  "value_proposition": "Solaris Power focuses on providing analytics for renewable energy grids.",
+  "target_audience": "enterprise",
+  "email_goal": "sales"
+}
+```
+2026-06-22 18:18:59 | INFO     | cold_email.analyzer_agent           | [input_analyzer] DONE | industry='Renewable Energy' goal='sales' audience='enterprise'
+2026-06-22 18:18:59 | INFO     | cold_email.analyzer_agent           | [strategy_planner] START | industry='Renewable Energy' goal='sales'
+2026-06-22 18:18:59 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Invoking Gemini LLM
+2026-06-22 18:20:07 | DEBUG    | cold_email.analyzer_agent           | [strategy_planner] Raw LLM response: ```json
+{
+  "tone": "persuasive",
+  "email_length": "medium",
+  "word_range": "100–200 words",
+  "key_hooks": [
+    "Proactive identification of critical grid component failures.",
+    "Maximizing uptime and energy generation efficiency for renewable assets.",
+    "Leveraging IoT data for superior, 
+2026-06-22 18:20:07 | INFO     | cold_email.analyzer_agent           | [strategy_planner] DONE | tone='persuasive' length='medium' hooks=5
+2026-06-22 18:20:07 | INFO     | cold_email.analyzer_agent           | Analyzer graph completed successfully | tone='persuasive' length='medium'
+2026-06-22 18:20:07 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:20:07 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:20:07 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:20:07 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:20:07 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:20:07 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:20:07 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:20:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:20:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:20:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:20:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:20:07 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:20:10 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:20:13 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:20:13 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:20:13 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:20:13 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:20:13 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:20:13 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:20:13 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:20:13 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:20:13 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:20:13 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:20:13 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:20:13 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:20:16 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:20:16 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:20:16 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:20:16 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:20:16 | INFO     | cold_email.__main__                 | Generate clicked | variations=1 | lead='Solaris Power_3618796055371515865' | template='sales_pain_solution'
+2026-06-22 18:20:16 | INFO     | cold_email.email_writer_agent       | Compiling LangGraph email writer pipeline
+2026-06-22 18:20:16 | INFO     | cold_email.email_writer_agent       | LangGraph writer pipeline compiled successfully
+2026-06-22 18:20:16 | INFO     | cold_email.email_writer_agent       | Invoking email writer graph | company='Solaris Power' template='sales_pain_solution' variations=1
+2026-06-22 18:20:16 | INFO     | cold_email.email_writer_agent       | [email_writer] START | company='Solaris Power' template='sales_pain_solution' variations=1
+2026-06-22 18:20:16 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Invoking Gemini LLM
+2026-06-22 18:20:31 | DEBUG    | cold_email.email_writer_agent       | [email_writer] Raw LLM response (first 500 chars): ```json
+[
+  {
+    "subject": "Enhancing Grid Uptime & Analytics for Solaris Power",
+    "body": "Solaris Power delivers crucial analytics for renewable energy grids. Yet, we often hear from leaders in your sector that proactively identifying equipment failures *before* they impact grid stability remains a significant hurdle. Reactive maintenance leads to unexpected outages, hindering energy generation and increasing operational costs across complex renewable assets.\n\nThat's exactly the problem
+2026-06-22 18:20:31 | INFO     | cold_email.email_writer_agent       | [email_writer] DONE | generated 1 email(s)
+2026-06-22 18:20:31 | INFO     | cold_email.__main__                 | Email writer returned 1 email(s)
+2026-06-22 18:20:31 | INFO     | cold_email.compliance_agent         | Compiling LangGraph compliance pipeline
+2026-06-22 18:20:31 | INFO     | cold_email.compliance_agent         | LangGraph compliance pipeline compiled successfully
+2026-06-22 18:20:31 | INFO     | cold_email.compliance_agent         | Invoking compliance checker graph | subject='Enhancing Grid Uptime & Analytics for Solaris Power'
+2026-06-22 18:20:31 | INFO     | cold_email.compliance_agent         | [compliance_checker] START | lead='Solaris Power'
+2026-06-22 18:20:31 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Invoking LLM
+2026-06-22 18:20:59 | DEBUG    | cold_email.compliance_agent         | [compliance_checker] Raw LLM response: {
+  "is_compliant": false,
+  "spam_keywords": [],
+  "ftc_status": {
+    "has_address": false,
+    "has_unsubscribe": false,
+    "issues": [
+      "Missing physical address.",
+      "Missing clear unsubscribe option."
+    ]
+  },
+  "claims_status": {
+    "has_misleading_claims": false,
+    "issues": [
+2026-06-22 18:20:59 | INFO     | cold_email.compliance_agent         | [compliance_checker] DONE | compliant=False | spam_words=0
+2026-06-22 18:20:59 | INFO     | cold_email.subject_agent            | Compiling LangGraph subject writer pipeline
+2026-06-22 18:20:59 | INFO     | cold_email.subject_agent            | LangGraph subject writer pipeline compiled successfully
+2026-06-22 18:20:59 | INFO     | cold_email.subject_agent            | Invoking subject writer graph | company='Solaris Power'
+2026-06-22 18:20:59 | INFO     | cold_email.subject_agent            | [subject_writer] START | lead='Solaris Power'
+2026-06-22 18:20:59 | DEBUG    | cold_email.subject_agent            | [subject_writer] Invoking LLM
+2026-06-22 18:21:07 | DEBUG    | cold_email.subject_agent            | [subject_writer] Raw LLM response: {
+  "subject_options": [
+    {
+      "subject": "Solaris Power grid uptime?",
+      "type": "Personalized",
+      "reason": "Directly references the target company and a critical operational metric (uptime), immediately grabbing attention by connecting to their core business challenge and potential 
+2026-06-22 18:21:07 | INFO     | cold_email.subject_agent            | [subject_writer] DONE | generated 3 options
+2026-06-22 18:21:07 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:21:07 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:21:07 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:21:07 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:21:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:07 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:21:07 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:21:07 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:21:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:07 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:07 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:21:08 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:21:13 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:21:26 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:21:26 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:21:26 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:21:26 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:21:26 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:26 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:21:26 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:21:26 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:21:26 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:26 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:26 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:26 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:26 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:21:31 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:21:31 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:21:31 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:21:31 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:21:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:31 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:21:31 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:21:31 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:21:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:31 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:21:32 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:21:35 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:21:35 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:21:35 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:21:35 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:21:35 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:35 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:35 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:35 | INFO     | cold_email.gmail_service            | Sending email to arqam1878@gmail.com via Gmail API REST endpoint (requests)
+2026-06-22 18:21:37 | INFO     | cold_email.gmail_service            | Email sent successfully. Message ID: 19eef7e5aea9a31e
+2026-06-22 18:21:37 | INFO     | cold_email.database                 | Logging sent email to arqam1878@gmail.com | thread='19eef7e5aea9a31e'
+2026-06-22 18:21:37 | DEBUG    | cold_email.database                 | Sent email logged successfully
+2026-06-22 18:21:37 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:21:37 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:21:37 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:21:37 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:37 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:37 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:37 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:21:37 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:21:38 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:21:43 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:22:31 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:22:31 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:22:31 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:22:31 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:22:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:31 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:22:31 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:22:31 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:22:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:31 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:31 | INFO     | cold_email.gmail_service            | Fetching thread 19eef7e5aea9a31e details from Gmail API via requests
+2026-06-22 18:22:33 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:33 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:33 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:22:34 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:22:34 | INFO     | cold_email.gmail_service            | Counted 0 replies from lead arqam1878@gmail.com in thread 19eef7e5aea9a31e
+2026-06-22 18:22:34 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:22:34 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:22:34 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:22:34 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:22:34 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:22:34 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:34 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:22:34 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:22:34 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:22:34 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:34 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:34 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:34 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:34 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:22:35 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:22:50 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:22:50 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:22:50 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:22:50 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:22:50 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:50 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:22:50 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:22:50 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:22:50 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:50 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:50 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:22:50 | INFO     | cold_email.gmail_service            | Fetching thread 19eef7e5aea9a31e details from Gmail API via requests
+2026-06-22 18:23:06 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:23:06 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:23:06 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:23:37 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 18:23:37 | INFO     | cold_email.gmail_service            | Counted 1 replies from lead arqam1878@gmail.com in thread 19eef7e5aea9a31e
+2026-06-22 18:23:37 | DEBUG    | cold_email.database                 | Updated reply count to 1 for sent email id 1
+2026-06-22 18:23:37 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:23:37 | INFO     | cold_email.database                 | Initialising database at 'leads.db'
+2026-06-22 18:23:37 | DEBUG    | cold_email.database                 | Database initialised successfully
+2026-06-22 18:23:37 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:23:37 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:23:38 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:23:38 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 18:23:38 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 18:23:38 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 18:23:38 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:23:38 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:23:38 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:23:38 | DEBUG    | cold_email.gmail_service            | Loaded existing credentials from .token.json
+2026-06-22 18:23:38 | INFO     | cold_email.gmail_service            | Fetching Gmail profile email via requests REST API
+2026-06-22 18:24:09 | INFO     | cold_email.gmail_service            | Fetched Gmail profile email: mohammadarqam0@gmail.com
+2026-06-22 22:20:29 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-22 22:20:29 | DEBUG    | cold_email.database                 | Fetching all leads from database
+2026-06-22 22:20:29 | INFO     | cold_email.database                 | Fetched 5 lead(s) from database
+2026-06-22 22:20:48 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-22 22:20:48 | DEBUG    | cold_email.database                 | Fetching all sent emails from database
+2026-06-22 22:21:53 | INFO     | cold_email                          | Logger initialised — writing to D:\AI Agents projects\cold-emailing-agent\logs\app.log
+2026-06-22 22:21:53 | DEBUG    | cold_email.database                 | Fetching all sent emails from database

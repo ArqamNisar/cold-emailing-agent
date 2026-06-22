@@ -181,3 +181,99 @@ def check_thread_replies(thread_id: str, lead_email: str) -> int:
     except Exception as e:
         log.error("Error checking replies in thread %s: %s", thread_id, e)
         return 0
+
+def extract_body(payload) -> str:
+    """Recursively search and extract text/plain or text/html from message payload."""
+    if 'parts' in payload:
+        # 1. Search for text/plain
+        for part in payload['parts']:
+            if part.get('mimeType') == 'text/plain':
+                data = part.get('body', {}).get('data', '')
+                if data:
+                    try:
+                        return base64.urlsafe_b64decode(data.encode('ASCII')).decode('utf-8', errors='replace')
+                    except Exception as dec_err:
+                        log.error("Failed to decode text/plain body: %s", dec_err)
+        # 2. Search for text/html if text/plain not found
+        for part in payload['parts']:
+            if part.get('mimeType') == 'text/html':
+                data = part.get('body', {}).get('data', '')
+                if data:
+                    try:
+                        return base64.urlsafe_b64decode(data.encode('ASCII')).decode('utf-8', errors='replace')
+                    except Exception as dec_err:
+                        log.error("Failed to decode text/html body: %s", dec_err)
+        # 3. Recursively search nested parts
+        for part in payload['parts']:
+            if 'parts' in part:
+                body = extract_body(part)
+                if body:
+                    return body
+    else:
+        # Simple body payload
+        data = payload.get('body', {}).get('data', '')
+        if data:
+            try:
+                return base64.urlsafe_b64decode(data.encode('ASCII')).decode('utf-8', errors='replace')
+            except Exception as dec_err:
+                log.error("Failed to decode simple body: %s", dec_err)
+    return ""
+
+def get_thread_replies(thread_id: str, lead_email: str) -> list:
+    """
+    Check the Gmail thread for replies from the lead.
+    Returns a list of reply message dicts, each with sender, date, snippet, and body.
+    """
+    if not is_authenticated():
+        log.warning("get_thread_replies called but not authenticated")
+        return []
+    try:
+        creds = get_credentials()
+        url = f"https://gmail.googleapis.com/gmail/v1/users/me/threads/{thread_id}"
+        headers = {
+            "Authorization": f"Bearer {creds.token}"
+        }
+        log.info("Fetching thread %s details from Gmail API for replies", thread_id)
+        response = requests.get(url, headers=headers, timeout=15)
+        if response.status_code != 200:
+            log.error("Failed to fetch thread %s. Code: %d, Response: %s", thread_id, response.status_code, response.text)
+            return []
+            
+        thread_data = response.json()
+        messages = thread_data.get('messages', [])
+        
+        replies = []
+        my_email = get_profile_email().lower()
+        lead_email_clean = lead_email.strip().lower()
+        
+        for msg in messages:
+            payload = msg.get('payload', {})
+            headers_list = payload.get('headers', [])
+            
+            from_header = ""
+            date_header = ""
+            for h in headers_list:
+                name_lower = h.get('name', '').lower()
+                if name_lower == 'from':
+                    from_header = h.get('value', '')
+                elif name_lower == 'date':
+                    date_header = h.get('value', '')
+                    
+            from_header_lower = from_header.lower()
+            
+            # If the email is from the lead, and NOT from me
+            if lead_email_clean in from_header_lower and my_email not in from_header_lower:
+                body = extract_body(payload)
+                replies.append({
+                    "from": from_header,
+                    "date": date_header,
+                    "snippet": msg.get('snippet', ''),
+                    "body": body if body.strip() else msg.get('snippet', '')
+                })
+                
+        log.info("Retrieved %d reply/replies content from lead %s in thread %s", len(replies), lead_email, thread_id)
+        return replies
+    except Exception as e:
+        log.error("Error retrieving replies in thread %s: %s", thread_id, e)
+        return []
+

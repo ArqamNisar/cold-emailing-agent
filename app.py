@@ -1000,12 +1000,45 @@ with tab_dashboard:
     leads = database.get_all_leads()
     sent_emails = database.get_sent_emails()
 
+    # Lead Selection Dropdown
+    selected_lead = None
+    if leads:
+        lead_options = ["All Leads"] + [f"{l['company_name']} ({l['email']})" for l in leads]
+        selected_lead_opt = st.selectbox(
+            "🎯 Filter Dashboard by Lead / Company:",
+            options=lead_options,
+            index=0,
+            key="dashboard_lead_filter"
+        )
+        
+        if selected_lead_opt != "All Leads":
+            selected_lead_idx = lead_options.index(selected_lead_opt) - 1
+            selected_lead = leads[selected_lead_idx]
+            # Filter sent emails for this lead
+            filtered_sent_emails = [e for e in sent_emails if e.get('lead_id') == selected_lead['id']]
+        else:
+            filtered_sent_emails = sent_emails
+    else:
+        filtered_sent_emails = []
+
+    # Display selected lead details (Company Name, Email, Focus)
+    if selected_lead:
+        st.markdown(f"""
+        <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; padding: 1.25rem; margin-top: 0.5rem; margin-bottom: 1.5rem;">
+            <p style="margin: 0; font-size: 0.8rem; color: #a5b4fc; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Selected Lead</p>
+            <h3 style="margin: 0.2rem 0; font-size: 1.6rem; color: #ffffff; font-weight: 700;">🏢 {selected_lead['company_name']}</h3>
+            <p style="margin: 0.2rem 0; font-size: 0.95rem; color: #cbd5e1;">📩 Email: <b>{selected_lead['email']}</b></p>
+            <p style="margin: 0.2rem 0; font-size: 0.9rem; color: #94a3b8;">🎯 Focus: {selected_lead.get('company_focus', 'N/A')}</p>
+            <p style="margin: 0.2rem 0; font-size: 0.9rem; color: #94a3b8;">💡 Value Prop: {selected_lead.get('our_value_proposition', 'N/A')}</p>
+        </div>
+        """, unsafe_allow_html=True)
+
     # Calculate metrics
-    total_leads = len(leads)
-    total_sent = len(sent_emails)
+    total_leads = 1 if selected_lead else len(leads)
+    total_sent = len(filtered_sent_emails)
     
     # Calculate total replies (sum of reply_count for each sent email)
-    total_replies = sum(item.get('reply_count', 0) for item in sent_emails)
+    total_replies = sum(item.get('reply_count', 0) for item in filtered_sent_emails)
     
     # Reply rate percentage
     reply_rate = (total_replies / total_sent * 100) if total_sent > 0 else 0.0
@@ -1079,12 +1112,12 @@ with tab_dashboard:
     # 4. Sent Emails Log
     st.markdown("---")
     st.markdown("### 📋 Sent Emails History")
-    if not sent_emails:
-        st.info("No emails have been sent yet. Generate and send variation drafts from the Leads tab to begin.")
+    if not filtered_sent_emails:
+        st.info("No emails have been sent yet. Generate and send variation drafts from the Leads tab to begin." if not sent_emails else "No emails sent to the selected lead yet.")
     else:
         # Create a dataframe for nice tabular display
         history_data = []
-        for idx, email_log in enumerate(sent_emails):
+        for idx, email_log in enumerate(filtered_sent_emails):
             lead_company = email_log.get('lead_company_name') or "Unknown Lead"
             recipient = email_log.get('recipient_email', '')
             subject = email_log.get('subject', '')
@@ -1107,7 +1140,7 @@ with tab_dashboard:
         
         # Expanders to view content
         st.markdown("#### 🔍 View Email Content")
-        for idx, email_log in enumerate(sent_emails):
+        for idx, email_log in enumerate(filtered_sent_emails):
             lead_company = email_log.get('lead_company_name') or "Unknown Lead"
             recipient = email_log.get('recipient_email', '')
             subject = email_log.get('subject', '')
@@ -1133,6 +1166,53 @@ with tab_dashboard:
                     f'">{body}</div>'
                 )
                 st.markdown(email_body_box, unsafe_allow_html=True)
+
+                # Fetch and display replies if reply_cnt > 0
+                if reply_cnt > 0:
+                    st.markdown("<br><b>💬 Lead Replies:</b>", unsafe_allow_html=True)
+                    is_gmail_connected_status = False
+                    try:
+                        is_gmail_connected_status = gmail_service.is_authenticated()
+                    except Exception:
+                        pass
+                    
+                    if is_gmail_connected_status:
+                        thread_id = email_log.get('thread_id')
+                        replies_cache_key = f"replies_cache_{thread_id}"
+                        
+                        if replies_cache_key not in st.session_state:
+                            with st.spinner("Fetching replies from Gmail..."):
+                                replies = gmail_service.get_thread_replies(thread_id, recipient)
+                                st.session_state[replies_cache_key] = replies
+                        else:
+                            replies = st.session_state[replies_cache_key]
+                            
+                        if replies:
+                            for r_idx, reply in enumerate(replies):
+                                reply_title_html = (
+                                    f'<div style="font-size:0.8rem; color:#64748b; margin-top: 0.8rem; margin-bottom: 0.2rem;">'
+                                    f'<b>From:</b> {reply["from"]} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Date:</b> {reply["date"]}'
+                                    f'</div>'
+                                )
+                                reply_body_html = (
+                                    f'<div style="'
+                                    f'background: rgba(16, 185, 129, 0.08);'
+                                    f'border: 1px solid rgba(16, 185, 129, 0.2);'
+                                    f'border-radius: 8px;'
+                                    f'padding: 1rem;'
+                                    f'color: #e2e8f0;'
+                                    f'font-family: \'Inter\', sans-serif;'
+                                    f'white-space: pre-wrap;'
+                                    f'line-height: 1.5;'
+                                    f'font-size: 0.88rem;'
+                                    f'">{reply["body"]}</div>'
+                                )
+                                st.markdown(reply_title_html, unsafe_allow_html=True)
+                                st.markdown(reply_body_html, unsafe_allow_html=True)
+                        else:
+                            st.info("No reply body fetched. Perform a reply sync or ensure Gmail connection is active.")
+                    else:
+                        st.warning("⚠️ Connect your Gmail account in the Settings tab to fetch and display the reply content.")
 
 # --- TAB 4: GMAIL SETTINGS ---
 with tab_settings:
