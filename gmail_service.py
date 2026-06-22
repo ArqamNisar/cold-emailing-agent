@@ -16,8 +16,8 @@ SCOPES = [
     'https://www.googleapis.com/auth/gmail.readonly'
 ]
 
-TOKEN_FILE = 'token.json'
-CREDENTIALS_FILE = 'credentials.json'
+TOKEN_FILE = '.token.json'
+CREDENTIALS_FILE = '.credentials.json'
 
 def get_credentials():
     """Retrieve credentials from token.json or refresh them if expired."""

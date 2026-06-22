@@ -1023,10 +1023,22 @@ with tab_settings:
                 creds_data = json.load(uploaded_creds)
                 # Verify that it is a valid Google OAuth Client secrets file
                 if 'installed' in creds_data:
-                    with open('credentials.json', 'w') as f:
-                        json.dump(creds_data, f)
-                    st.success("credentials.json uploaded and saved successfully!")
-                    st.rerun()
+                    # Check if file on disk already exists and is identical
+                    already_saved = False
+                    if os.path.exists('.credentials.json'):
+                        try:
+                            with open('.credentials.json', 'r') as f:
+                                existing_data = json.load(f)
+                            if existing_data == creds_data:
+                                already_saved = True
+                        except Exception:
+                            pass
+                    
+                    if not already_saved:
+                        with open('.credentials.json', 'w') as f:
+                            json.dump(creds_data, f)
+                        st.success("credentials.json uploaded and saved successfully!")
+                        st.rerun()
                 elif 'web' in creds_data:
                     st.error("⚠️ You uploaded a Web Application credentials file. Google OAuth requires **Desktop Application** credentials for local desktop scripts to avoid 'redirect_uri_mismatch' errors. Please follow step 5 of the instructions above to create a Desktop app credential.")
                 else:
@@ -1034,21 +1046,21 @@ with tab_settings:
             except Exception as e:
                 st.error(f"Error reading credentials file: {e}")
 
-        # If credentials.json exists, show authorization button
-        if os.path.exists('credentials.json'):
+        # If .credentials.json exists, show authorization button
+        if os.path.exists('.credentials.json'):
             # Detect type
             is_desktop_creds = False
             try:
-                with open('credentials.json', 'r') as f:
+                with open('.credentials.json', 'r') as f:
                     c_data = json.load(f)
                     is_desktop_creds = 'installed' in c_data
             except Exception:
                 pass
 
             if not is_desktop_creds:
-                st.error("⚠️ The saved `credentials.json` is a **Web Application** credential, which causes `redirect_uri_mismatch` errors on sign in. Please overwrite it by uploading a **Desktop Application** credential (follow step 5 above).")
+                st.error("⚠️ The saved `.credentials.json` is a **Web Application** credential, which causes `redirect_uri_mismatch` errors on sign in. Please overwrite it by uploading a **Desktop Application** credential (follow step 5 above).")
             
-            st.info("ℹ️ credentials.json is present. Click the button below to authorize the application.")
+            st.info("ℹ️ `.credentials.json` is present. Click the button below to authorize the application.")
             if st.button("🔗 Connect Gmail Account", key="connect_gmail", type="primary", disabled=not is_desktop_creds):
                 with st.spinner("Opening browser for authorization..."):
                     try:
