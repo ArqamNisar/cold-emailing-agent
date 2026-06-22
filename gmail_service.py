@@ -136,3 +136,48 @@ def send_email(to_email: str, subject: str, body_text: str):
     except Exception as e:
         log.error("Failed to send email to %s: %s", to_email, e)
         raise e
+
+def check_thread_replies(thread_id: str, lead_email: str) -> int:
+    """
+    Check the Gmail thread for replies from the lead.
+    Returns the number of reply messages from the lead.
+    """
+    if not is_authenticated():
+        log.warning("check_thread_replies called but not authenticated")
+        return 0
+    try:
+        creds = get_credentials()
+        url = f"https://gmail.googleapis.com/gmail/v1/users/me/threads/{thread_id}"
+        headers = {
+            "Authorization": f"Bearer {creds.token}"
+        }
+        log.info("Fetching thread %s details from Gmail API via requests", thread_id)
+        response = requests.get(url, headers=headers, timeout=15)
+        if response.status_code != 200:
+            log.error("Failed to fetch thread %s. Code: %d, Response: %s", thread_id, response.status_code, response.text)
+            return 0
+            
+        thread_data = response.json()
+        messages = thread_data.get('messages', [])
+        
+        reply_count = 0
+        my_email = get_profile_email().lower()
+        lead_email_clean = lead_email.strip().lower()
+        
+        for msg in messages:
+            headers_list = msg.get('payload', {}).get('headers', [])
+            from_header = ""
+            for h in headers_list:
+                if h.get('name', '').lower() == 'from':
+                    from_header = h.get('value', '').lower()
+                    break
+            
+            # If the email is from the lead, and NOT from me
+            if lead_email_clean in from_header and my_email not in from_header:
+                reply_count += 1
+                
+        log.info("Counted %d replies from lead %s in thread %s", reply_count, lead_email, thread_id)
+        return reply_count
+    except Exception as e:
+        log.error("Error checking replies in thread %s: %s", thread_id, e)
+        return 0

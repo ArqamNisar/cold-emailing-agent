@@ -213,9 +213,10 @@ st.markdown("""
 
 
 # Setup navigation tabs
-tab_csv, tab_db, tab_settings = st.tabs([
+tab_csv, tab_db, tab_dashboard, tab_settings = st.tabs([
     "📥 Upload Leads", 
     "🗂️ Leads",
+    "📊 Dashboard",
     "⚙️ Gmail Integration"
 ])
 
@@ -765,11 +766,25 @@ def render_email_generation_ui(lead, key_prefix):
                                     else:
                                         with st.spinner("Sending email..."):
                                             try:
-                                                gmail_service.send_email(
+                                                sent_msg = gmail_service.send_email(
                                                     to_email=edit_recipient,
                                                     subject=edit_subject,
                                                     body_text=edit_body
                                                 )
+                                                msg_id = sent_msg.get('id', 'Unknown')
+                                                thread_id = sent_msg.get('threadId', 'Unknown')
+                                                
+                                                # Look up lead ID and log the sent email
+                                                lead_id = database.get_lead_id_by_email(edit_recipient)
+                                                database.save_sent_email(
+                                                    lead_id=lead_id,
+                                                    recipient_email=edit_recipient,
+                                                    subject=edit_subject,
+                                                    body=edit_body,
+                                                    message_id=msg_id,
+                                                    thread_id=thread_id
+                                                )
+                                                
                                                 st.success(f"🎉 Email sent successfully to **{edit_recipient}**!")
                                             except Exception as send_err:
                                                 st.error(f"❌ Failed to send email: {send_err}")
@@ -976,7 +991,150 @@ with tab_db:
                 # Render the email generation UI
                 render_email_generation_ui(chosen_lead, "db")
 
-# --- TAB 3: GMAIL SETTINGS ---
+# --- TAB 3: ANALYTICS DASHBOARD ---
+with tab_dashboard:
+    st.markdown("### 📊 Cold Outreach Dashboard")
+    st.write("Track sent emails, sync replies dynamically from Gmail, and monitor response rates.")
+
+    # 1. Fetch leads & sent emails
+    leads = database.get_all_leads()
+    sent_emails = database.get_sent_emails()
+
+    # Calculate metrics
+    total_leads = len(leads)
+    total_sent = len(sent_emails)
+    
+    # Calculate total replies (sum of reply_count for each sent email)
+    total_replies = sum(item.get('reply_count', 0) for item in sent_emails)
+    
+    # Reply rate percentage
+    reply_rate = (total_replies / total_sent * 100) if total_sent > 0 else 0.0
+
+    # 2. Render Metrics Cards
+    col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+    with col_m1:
+        st.metric("🗂️ Total Leads", f"{total_leads}")
+    with col_m2:
+        st.metric("📨 Emails Sent", f"{total_sent}")
+    with col_m3:
+        st.metric("💬 Total Replies", f"{total_replies}")
+    with col_m4:
+        st.metric("📈 Response Rate", f"{reply_rate:.1f}%")
+
+    # 3. Synchronize Replies Logic
+    st.markdown("---")
+    col_sync_btn, col_sync_msg = st.columns([1, 2])
+    with col_sync_btn:
+        # Check Gmail connection status
+        is_gmail_connected = False
+        try:
+            is_gmail_connected = gmail_service.is_authenticated()
+        except Exception:
+            pass
+
+        sync_btn_clicked = st.button(
+            "🔄 Sync Replies from Gmail",
+            key="sync_replies_btn",
+            type="primary",
+            disabled=not is_gmail_connected,
+            use_container_width=True
+        )
+    with col_sync_msg:
+        if not is_gmail_connected:
+            st.warning("⚠️ Connect your Gmail account in the **⚙️ Gmail Integration** tab to enable reply synchronization.")
+        else:
+            st.info("ℹ️ Click the button to scan Gmail threads for new replies from your leads.")
+
+    if is_gmail_connected and sync_btn_clicked:
+        if not sent_emails:
+            st.info("No sent emails to sync replies for.")
+        else:
+            with st.spinner("🔄 Checking Gmail threads for replies..."):
+                synced_count = 0
+                new_replies_total = 0
+                for email_log in sent_emails:
+                    thread_id = email_log.get('thread_id')
+                    recipient = email_log.get('recipient_email')
+                    log_id = email_log.get('id')
+                    
+                    if thread_id and thread_id != 'Unknown':
+                        # Call Gmail API to fetch number of replies in this thread
+                        current_replies = gmail_service.check_thread_replies(thread_id, recipient)
+                        
+                        # Update DB if different
+                        old_replies = email_log.get('reply_count', 0)
+                        if current_replies != old_replies:
+                            database.update_reply_count(log_id, current_replies)
+                            new_replies_total += (current_replies - old_replies)
+                            synced_count += 1
+                
+                # Reload sent emails after update
+                sent_emails = database.get_sent_emails()
+                total_replies = sum(item.get('reply_count', 0) for item in sent_emails)
+                reply_rate = (total_replies / len(sent_emails) * 100) if len(sent_emails) > 0 else 0.0
+                
+                st.success(f"✅ Sync complete! Checked {len(sent_emails)} threads. Updated {synced_count} log(s) with {new_replies_total} new reply/replies.")
+                st.rerun()
+
+    # 4. Sent Emails Log
+    st.markdown("---")
+    st.markdown("### 📋 Sent Emails History")
+    if not sent_emails:
+        st.info("No emails have been sent yet. Generate and send variation drafts from the Leads tab to begin.")
+    else:
+        # Create a dataframe for nice tabular display
+        history_data = []
+        for idx, email_log in enumerate(sent_emails):
+            lead_company = email_log.get('lead_company_name') or "Unknown Lead"
+            recipient = email_log.get('recipient_email', '')
+            subject = email_log.get('subject', '')
+            reply_cnt = email_log.get('reply_count', 0)
+            sent_time = email_log.get('sent_at', '')
+            status = f"✅ Replied ({reply_cnt})" if reply_cnt > 0 else "✉️ Sent (No reply)"
+            
+            history_data.append({
+                "Company": lead_company,
+                "Recipient Email": recipient,
+                "Subject": subject,
+                "Status": status,
+                "Sent Time": sent_time
+            })
+            
+        history_df = pd.DataFrame(history_data)
+        
+        # Display logs in Streamlit
+        st.dataframe(history_df, use_container_width=True, hide_index=True)
+        
+        # Expanders to view content
+        st.markdown("#### 🔍 View Email Content")
+        for idx, email_log in enumerate(sent_emails):
+            lead_company = email_log.get('lead_company_name') or "Unknown Lead"
+            recipient = email_log.get('recipient_email', '')
+            subject = email_log.get('subject', '')
+            body = email_log.get('body', '')
+            reply_cnt = email_log.get('reply_count', 0)
+            status_text = f"✅ Replied ({reply_cnt})" if reply_cnt > 0 else "No reply yet"
+            
+            with st.expander(f"📄 To: {recipient} ({lead_company}) — {subject} | Status: {status_text}", expanded=False):
+                st.markdown(f"**Subject:** {subject}")
+                st.markdown(f"**Sent:** {email_log.get('sent_at', '')}")
+                email_body_box = (
+                    f'<div style="'
+                    f'background: rgba(30, 41, 59, 0.45);'
+                    f'border: 1px solid rgba(255, 255, 255, 0.07);'
+                    f'border-radius: 8px;'
+                    f'padding: 1.2rem;'
+                    f'color: #e2e8f0;'
+                    f'font-family: \'Inter\', sans-serif;'
+                    f'white-space: pre-wrap;'
+                    f'line-height: 1.6;'
+                    f'font-size: 0.92rem;'
+                    f'margin-top: 0.5rem;'
+                    f'">{body}</div>'
+                )
+                st.markdown(email_body_box, unsafe_allow_html=True)
+
+# --- TAB 4: GMAIL SETTINGS ---
 with tab_settings:
     st.markdown("### ⚙️ Gmail API Integration")
     st.write("Connect your Gmail account to send generated email variations directly to your leads.")
